@@ -113,7 +113,7 @@ export default function Contact() {
               <span className="text-terminal-muted">echo</span>{' '}
               <span className="text-accent-cyan">$STATUS</span>
             </p>
-            <p className="text-accent-green pl-4">Open to opportunities ✓</p>
+            <p className="text-accent-green pl-4">Open to opportunities</p>
           </div>
         </motion.div>
 
@@ -129,7 +129,7 @@ export default function Contact() {
               key={link.name}
               href={link.url}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer me"
               initial={{ opacity: 0, scale: 0 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}

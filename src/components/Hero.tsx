@@ -206,16 +206,18 @@ export default function Hero() {
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
         className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden sm:block"
+        role="presentation"
+        aria-hidden="true"
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="w-6 h-10 border-2 border-terminal-muted rounded-full flex justify-center"
+          className="w-6 h-10 border-2 border-terminal-muted rounded-full flex justify-center motion-reduce:animate-none"
         >
           <motion.div
             animate={{ y: [0, 12, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="w-1.5 h-3 bg-accent-cyan rounded-full mt-2"
+            className="w-1.5 h-3 bg-accent-cyan rounded-full mt-2 motion-reduce:animate-none"
           />
         </motion.div>
       </motion.div>

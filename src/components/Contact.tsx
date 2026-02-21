@@ -23,7 +23,7 @@ const socialLinks = [
   },
   {
     name: 'Email',
-    url: 'mailto:rishi.mishra@wonderlendhubs.com',
+    url: 'mailto:rishimishra1508@gmail.com',
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -71,7 +71,7 @@ export default function Contact() {
           className="mb-12"
         >
           <a
-            href="mailto:rishi.mishra@wonderlendhubs.com"
+            href="mailto:rishimishra1508@gmail.com"
             className="btn-primary text-lg"
           >
             Say Hello
@@ -100,7 +100,7 @@ export default function Contact() {
               <span className="text-accent-cyan">$EMAIL</span>
             </p>
             <p className="text-terminal-text/70 pl-4">
-              rishi.mishra@wonderlendhubs.com
+              rishimishra1508@gmail.com
             </p>
             <p className="mt-4">
               <span className="text-accent-green">$</span>{' '}

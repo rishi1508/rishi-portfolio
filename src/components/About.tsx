@@ -95,9 +95,12 @@ export default function About() {
           >
             <div className="relative z-10">
               <div className="rounded-xl overflow-hidden bg-gradient-to-br from-accent-cyan/20 to-accent-purple/20 p-1">
-                <div className="bg-terminal-surface rounded-lg overflow-hidden aspect-square flex items-center justify-center">
-                  {/* Placeholder avatar with initials */}
-                  <div className="text-6xl font-bold gradient-text">RM</div>
+                <div className="bg-terminal-surface rounded-lg overflow-hidden aspect-square">
+                  <img 
+                    src="/rishi-portfolio/rishi-photo.jpg" 
+                    alt="Rishi Mishra" 
+                    className="w-full h-full object-cover object-top filter grayscale-[20%] hover:grayscale-0 transition-all duration-300"
+                  />
                 </div>
               </div>
             </div>

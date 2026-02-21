@@ -38,6 +38,20 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-accent-cyan/50;
   }
+
+  /* Accessibility - Focus visible states */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent-cyan;
+  }
+
+  /* Skip to main content link (screen readers) */
+  .skip-link {
+    @apply absolute -top-10 left-4 z-50 px-4 py-2 bg-accent-cyan text-terminal-bg font-semibold rounded-lg transition-all;
+  }
+
+  .skip-link:focus {
+    @apply top-4;
+  }
 }
 
 @layer components {
@@ -98,13 +112,15 @@
   .btn-primary {
     @apply inline-flex items-center gap-2 px-6 py-3 bg-accent-cyan text-terminal-bg 
            font-semibold rounded-lg transition-all duration-300 
-           hover:bg-accent-cyan/90 hover:shadow-lg hover:shadow-accent-cyan/25;
+           hover:bg-accent-cyan/90 hover:shadow-lg hover:shadow-accent-cyan/25
+           focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent-cyan focus-visible:ring-offset-terminal-bg;
   }
 
   .btn-outline {
     @apply inline-flex items-center gap-2 px-6 py-3 border border-accent-cyan text-accent-cyan 
            font-semibold rounded-lg transition-all duration-300 
-           hover:bg-accent-cyan/10 hover:shadow-lg hover:shadow-accent-cyan/10;
+           hover:bg-accent-cyan/10 hover:shadow-lg hover:shadow-accent-cyan/10
+           focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent-cyan focus-visible:ring-offset-terminal-bg;
   }
 
   /* Link styling */

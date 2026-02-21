@@ -10,9 +10,12 @@ import Contact from '../components/Contact';
 ---
 
 <Layout>
+  <!-- Skip to main content link for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
   <Navigation client:load />
   
-  <main>
+  <main id="main-content">
     <Hero client:load />
     <About client:visible />
     <Skills client:visible />

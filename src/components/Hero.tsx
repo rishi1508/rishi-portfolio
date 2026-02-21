@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { Icons } from './icons';
 
 const roles = [
   'DevOps Engineer',
@@ -53,20 +54,21 @@ function TypewriterText({ texts }: { texts: string[] }) {
   );
 }
 
-function FloatingIcon({ icon, delay, x, y }: { icon: string; delay: number; x: string; y: string }) {
+function FloatingIcon({ icon: IconComponent, delay, x, y }: { icon: React.FC; delay: number; x: string; y: string }) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 0.15, scale: 1 }}
+      animate={{ opacity: 0.2, scale: 1 }}
       transition={{ delay, duration: 0.5 }}
-      className="absolute text-4xl md:text-5xl"
+      className="absolute text-accent-cyan/60"
       style={{ left: x, top: y }}
     >
       <motion.div
         animate={{ y: [0, -15, 0] }}
         transition={{ duration: 4, repeat: Infinity, delay }}
+        className="w-10 h-10 md:w-12 md:h-12"
       >
-        {icon}
+        <IconComponent />
       </motion.div>
     </motion.div>
   );
@@ -96,12 +98,12 @@ export default function Hero() {
 
       {/* Floating tech icons */}
       <div className="absolute inset-0 pointer-events-none hidden md:block">
-        <FloatingIcon icon="🐳" delay={0} x="10%" y="20%" />
-        <FloatingIcon icon="☁️" delay={0.2} x="85%" y="25%" />
-        <FloatingIcon icon="⚡" delay={0.4} x="15%" y="70%" />
-        <FloatingIcon icon="🔧" delay={0.6} x="80%" y="65%" />
-        <FloatingIcon icon="📦" delay={0.8} x="5%" y="45%" />
-        <FloatingIcon icon="🚀" delay={1} x="90%" y="45%" />
+        <FloatingIcon icon={Icons.Docker} delay={0} x="10%" y="20%" />
+        <FloatingIcon icon={Icons.Cloud} delay={0.2} x="85%" y="25%" />
+        <FloatingIcon icon={Icons.Lightning} delay={0.4} x="15%" y="70%" />
+        <FloatingIcon icon={Icons.Wrench} delay={0.6} x="80%" y="65%" />
+        <FloatingIcon icon={Icons.Package} delay={0.8} x="5%" y="45%" />
+        <FloatingIcon icon={Icons.Rocket} delay={1} x="90%" y="45%" />
       </div>
 
       {/* Main content */}

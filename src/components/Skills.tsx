@@ -1,16 +1,17 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import type { ReactNode } from 'react';
+import { Icons } from './icons';
 
 interface Skill {
   name: string;
-  icon: string;
-  color: string;
+  icon: ReactNode;
 }
 
 interface PipelineStage {
   name: string;
-  icon: string;
+  icon: ReactNode;
   skills: Skill[];
   color: string;
 }
@@ -18,52 +19,52 @@ interface PipelineStage {
 const pipelineStages: PipelineStage[] = [
   {
     name: 'Code',
-    icon: '📝',
+    icon: <Icons.Code />,
     color: 'from-accent-blue to-accent-cyan',
     skills: [
-      { name: 'Python', icon: '🐍', color: 'text-yellow-400' },
-      { name: 'Bash', icon: '💻', color: 'text-green-400' },
-      { name: 'YAML', icon: '📄', color: 'text-red-400' },
+      { name: 'Python', icon: <Icons.Python /> },
+      { name: 'Bash', icon: <Icons.Terminal /> },
+      { name: 'YAML', icon: <Icons.Document /> },
     ],
   },
   {
     name: 'Build',
-    icon: '🔨',
+    icon: <Icons.Build />,
     color: 'from-accent-cyan to-accent-green',
     skills: [
-      { name: 'Docker', icon: '🐳', color: 'text-blue-400' },
-      { name: 'GitLab CI', icon: '🦊', color: 'text-orange-400' },
-      { name: 'GitHub Actions', icon: '🔄', color: 'text-purple-400' },
+      { name: 'Docker', icon: <Icons.Docker /> },
+      { name: 'GitLab CI', icon: <Icons.GitLab /> },
+      { name: 'GitHub Actions', icon: <Icons.GitHub /> },
     ],
   },
   {
     name: 'Test',
-    icon: '🧪',
+    icon: <Icons.Test />,
     color: 'from-accent-green to-accent-orange',
     skills: [
-      { name: 'pytest', icon: '✅', color: 'text-green-400' },
-      { name: 'SonarQube', icon: '📊', color: 'text-blue-400' },
-      { name: 'Trivy', icon: '🔒', color: 'text-cyan-400' },
+      { name: 'pytest', icon: <Icons.Check /> },
+      { name: 'SonarQube', icon: <Icons.Chart /> },
+      { name: 'Trivy', icon: <Icons.Shield /> },
     ],
   },
   {
     name: 'Deploy',
-    icon: '🚀',
+    icon: <Icons.Deploy />,
     color: 'from-accent-orange to-accent-purple',
     skills: [
-      { name: 'Terraform', icon: '🏗️', color: 'text-purple-400' },
-      { name: 'Ansible', icon: '📜', color: 'text-red-400' },
-      { name: 'Kubernetes', icon: '☸️', color: 'text-blue-400' },
+      { name: 'Terraform', icon: <Icons.Server /> },
+      { name: 'Ansible', icon: <Icons.Document /> },
+      { name: 'Kubernetes', icon: <Icons.Kubernetes /> },
     ],
   },
   {
     name: 'Monitor',
-    icon: '📈',
+    icon: <Icons.Monitor />,
     color: 'from-accent-purple to-accent-cyan',
     skills: [
-      { name: 'CloudWatch', icon: '☁️', color: 'text-orange-400' },
-      { name: 'Prometheus', icon: '📊', color: 'text-orange-500' },
-      { name: 'Grafana', icon: '📉', color: 'text-yellow-400' },
+      { name: 'CloudWatch', icon: <Icons.Cloud /> },
+      { name: 'Prometheus', icon: <Icons.Chart /> },
+      { name: 'Grafana', icon: <Icons.Chart /> },
     ],
   },
 ];
@@ -81,6 +82,13 @@ const cloudSkills = [
   { name: 'SQS/SNS', category: 'Messaging' },
   { name: 'EKS', category: 'Kubernetes' },
   { name: 'CodePipeline', category: 'CI/CD' },
+];
+
+const stats = [
+  { value: '500+', label: 'Deployments', icon: <Icons.Rocket /> },
+  { value: '99.9%', label: 'Uptime', icon: <Icons.Clock /> },
+  { value: '99%', label: 'Time Saved', icon: <Icons.Lightning /> },
+  { value: '3+', label: 'Years Exp.', icon: <Icons.Calendar /> },
 ];
 
 export default function Skills() {
@@ -131,7 +139,7 @@ export default function Skills() {
                     >
                       {/* Stage icon */}
                       <div className={`pipeline-node bg-gradient-to-br ${stage.color} bg-opacity-10`}>
-                        <span className="text-2xl">{stage.icon}</span>
+                        <span className="text-terminal-bright w-6 h-6">{stage.icon}</span>
                       </div>
                       <span className="mt-2 font-mono text-sm text-terminal-bright">
                         {stage.name}
@@ -150,7 +158,7 @@ export default function Skills() {
                             }}
                             className="flex items-center gap-2 text-sm font-mono text-terminal-text/70"
                           >
-                            <span>{skill.icon}</span>
+                            <span className="text-accent-cyan w-4 h-4">{skill.icon}</span>
                             <span>{skill.name}</span>
                           </motion.div>
                         ))}
@@ -180,7 +188,7 @@ export default function Skills() {
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <h3 className="text-xl font-bold text-terminal-bright mb-6 flex items-center gap-3">
-            <span className="text-3xl">☁️</span>
+            <span className="text-accent-cyan w-8 h-8"><Icons.Cloud /></span>
             AWS Services
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
@@ -206,12 +214,7 @@ export default function Skills() {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16"
         >
-          {[
-            { value: '500+', label: 'Deployments', icon: '🚀' },
-            { value: '99.9%', label: 'Uptime', icon: '⏱️' },
-            { value: '99%', label: 'Time Saved', icon: '⚡' },
-            { value: '3+', label: 'Years Exp.', icon: '📅' },
-          ].map((stat, index) => (
+          {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}
@@ -219,7 +222,7 @@ export default function Skills() {
               transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
               className="text-center p-6 rounded-xl bg-terminal-surface/50 border border-terminal-border"
             >
-              <span className="text-3xl mb-2 block">{stat.icon}</span>
+              <span className="text-accent-cyan w-8 h-8 mx-auto mb-2 block">{stat.icon}</span>
               <p className="text-3xl font-bold gradient-text">{stat.value}</p>
               <p className="text-terminal-muted text-sm mt-1">{stat.label}</p>
             </motion.div>

@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import type { ReactNode } from 'react';
+import { Icons } from './icons';
 
 interface Project {
   title: string;
@@ -8,7 +10,7 @@ interface Project {
   longDescription: string;
   technologies: string[];
   highlights: string[];
-  icon: string;
+  icon: ReactNode;
   gradient: string;
   github?: string;
   demo?: string;
@@ -27,7 +29,7 @@ const projects: Project[] = [
       'Serverless architecture for cost efficiency',
       'Full-text search across all document types',
     ],
-    icon: '🧠',
+    icon: <Icons.Brain />,
     gradient: 'from-accent-cyan to-accent-blue',
   },
   {
@@ -42,7 +44,7 @@ const projects: Project[] = [
       'Reduced processing time by 80%',
       'Complete audit trail',
     ],
-    icon: '🏗️',
+    icon: <Icons.Building />,
     gradient: 'from-accent-purple to-accent-cyan',
   },
   {
@@ -57,7 +59,7 @@ const projects: Project[] = [
       'Zero manual intervention required',
       'Consistent, reproducible environments',
     ],
-    icon: '⚡',
+    icon: <Icons.Zap />,
     gradient: 'from-accent-orange to-accent-purple',
   },
 ];
@@ -77,7 +79,7 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
         <div className="p-6 flex flex-col flex-1">
           {/* Icon and title */}
           <div className="flex items-start justify-between mb-4">
-            <span className="text-4xl">{project.icon}</span>
+            <span className="text-accent-cyan w-10 h-10">{project.icon}</span>
             <div className="flex gap-3">
               {project.github && (
                 <a
@@ -122,7 +124,9 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
             <ul className="space-y-1">
               {project.highlights.map((highlight, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-terminal-text/60">
-                  <span className="text-accent-green mt-0.5">✓</span>
+                  <svg className="w-4 h-4 text-accent-green mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
                   {highlight}
                 </li>
               ))}

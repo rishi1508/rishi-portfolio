@@ -107,7 +107,7 @@ export default function Contact() {
               <span className="text-terminal-muted">echo</span>{' '}
               <span className="text-accent-cyan">$LOCATION</span>
             </p>
-            <p className="text-terminal-text/70 pl-4">India 🇮🇳</p>
+            <p className="text-terminal-text/70 pl-4">India</p>
             <p className="mt-4">
               <span className="text-accent-green">$</span>{' '}
               <span className="text-terminal-muted">echo</span>{' '}

@@ -170,3 +170,40 @@
     mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
   }
 }
+
+/* Print styles for resume/portfolio printing */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .noise, 
+  nav, 
+  .scroll-indicator,
+  button,
+  .glow-cyan,
+  .glow-purple {
+    display: none !important;
+  }
+
+  section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  a {
+    color: black !important;
+    text-decoration: underline !important;
+  }
+
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  a[href^="#"]::after {
+    content: "";
+  }
+}

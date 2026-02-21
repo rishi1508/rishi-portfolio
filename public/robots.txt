@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rishi1508.github.io/rishi-portfolio/sitemap.xml

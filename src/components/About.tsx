@@ -98,7 +98,11 @@ export default function About() {
                 <div className="bg-terminal-surface rounded-lg overflow-hidden aspect-square">
                   <img 
                     src="/rishi-portfolio/rishi-photo.jpg" 
-                    alt="Rishi Mishra" 
+                    alt="Rishi Mishra - DevOps Engineer"
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="400"
                     className="w-full h-full object-cover object-top filter grayscale-[20%] hover:grayscale-0 transition-all duration-300"
                   />
                 </div>

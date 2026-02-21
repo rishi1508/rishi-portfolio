@@ -55,9 +55,9 @@ const projects: Project[] = [
     technologies: ['Terraform', 'Ansible', 'GitLab CI', 'AWS', 'Python', 'React'],
     highlights: [
       'Tenant Validator - config validation & checks',
-      'OCTS - 4 hours to 5 minutes setup time',
+      'OCTS - reduced setup from days to under an hour',
       'Tenant Decommissioner - clean resource cleanup',
-      'Full lifecycle automation',
+      'Full lifecycle automation with testing',
     ],
     icon: <Icons.Zap />,
     gradient: 'from-accent-orange to-accent-purple',

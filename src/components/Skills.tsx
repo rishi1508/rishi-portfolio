@@ -127,26 +127,28 @@ export default function Skills() {
             </div>
             
             {/* Pipeline stages */}
-            <div className="p-6 md:p-8">
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 min-w-max md:min-w-0">
+            <div className="p-4 sm:p-6 md:p-8">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-4">
                 {pipelineStages.map((stage, stageIndex) => (
-                  <div key={stage.name} className="flex items-center gap-4">
+                  <div key={stage.name} className="flex flex-row md:flex-col items-center gap-4 w-full md:w-auto">
                     <motion.div
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={isInView ? { opacity: 1, scale: 1 } : {}}
                       transition={{ duration: 0.4, delay: 0.2 + stageIndex * 0.15 }}
-                      className="flex flex-col items-center"
+                      className="flex flex-row md:flex-col items-center gap-3 md:gap-0 w-full md:w-auto"
                     >
-                      {/* Stage icon */}
-                      <div className={`pipeline-node bg-gradient-to-br ${stage.color} bg-opacity-10`}>
-                        <span className="text-terminal-bright w-6 h-6">{stage.icon}</span>
+                      {/* Stage icon and name */}
+                      <div className="flex flex-col items-center shrink-0">
+                        <div className={`pipeline-node bg-gradient-to-br ${stage.color} bg-opacity-10`}>
+                          <span className="text-terminal-bright w-6 h-6">{stage.icon}</span>
+                        </div>
+                        <span className="mt-2 font-mono text-sm text-terminal-bright">
+                          {stage.name}
+                        </span>
                       </div>
-                      <span className="mt-2 font-mono text-sm text-terminal-bright">
-                        {stage.name}
-                      </span>
                       
                       {/* Skills under this stage */}
-                      <div className="mt-4 flex flex-col gap-2">
+                      <div className="flex flex-row md:flex-col gap-2 md:mt-4 flex-wrap">
                         {stage.skills.map((skill, skillIndex) => (
                           <motion.div
                             key={skill.name}
@@ -156,23 +158,32 @@ export default function Skills() {
                               duration: 0.3, 
                               delay: 0.4 + stageIndex * 0.15 + skillIndex * 0.1 
                             }}
-                            className="flex items-center gap-2 text-sm font-mono text-terminal-text/70"
+                            className="flex items-center gap-1 md:gap-2 text-xs md:text-sm font-mono text-terminal-text/70 bg-terminal-surface/50 md:bg-transparent px-2 py-1 md:p-0 rounded"
                           >
-                            <span className="text-accent-cyan w-4 h-4">{skill.icon}</span>
+                            <span className="text-accent-cyan w-3 h-3 md:w-4 md:h-4">{skill.icon}</span>
                             <span>{skill.name}</span>
                           </motion.div>
                         ))}
                       </div>
                     </motion.div>
 
-                    {/* Connector line */}
+                    {/* Connector line - vertical on mobile, horizontal on desktop */}
                     {stageIndex < pipelineStages.length - 1 && (
-                      <motion.div
-                        initial={{ scaleX: 0 }}
-                        animate={isInView ? { scaleX: 1 } : {}}
-                        transition={{ duration: 0.4, delay: 0.3 + stageIndex * 0.15 }}
-                        className="hidden md:block pipeline-connector origin-left"
-                      />
+                      <>
+                        <motion.div
+                          initial={{ scaleY: 0 }}
+                          animate={isInView ? { scaleY: 1 } : {}}
+                          transition={{ duration: 0.4, delay: 0.3 + stageIndex * 0.15 }}
+                          className="md:hidden w-0.5 h-4 bg-gradient-to-b from-accent-cyan to-accent-purple origin-top absolute -bottom-5 left-1/2 -translate-x-1/2"
+                          style={{ display: 'none' }}
+                        />
+                        <motion.div
+                          initial={{ scaleX: 0 }}
+                          animate={isInView ? { scaleX: 1 } : {}}
+                          transition={{ duration: 0.4, delay: 0.3 + stageIndex * 0.15 }}
+                          className="hidden md:block pipeline-connector origin-left"
+                        />
+                      </>
                     )}
                   </div>
                 ))}

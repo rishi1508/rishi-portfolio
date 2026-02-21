@@ -107,7 +107,7 @@ export default function Hero() {
       </div>
 
       {/* Main content */}
-      <div className="relative z-10 max-w-4xl mx-auto text-center">
+      <div className="relative z-10 max-w-4xl mx-auto text-center pb-16 sm:pb-20">
         {/* Terminal header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -198,26 +198,27 @@ export default function Hero() {
           </button>
         </motion.div>
 
-        {/* Scroll indicator */}
+      </div>
+
+      {/* Scroll indicator - positioned relative to section, not content */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden sm:block"
+      >
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="w-6 h-10 border-2 border-terminal-muted rounded-full flex justify-center"
         >
           <motion.div
-            animate={{ y: [0, 10, 0] }}
+            animate={{ y: [0, 12, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="w-6 h-10 border-2 border-terminal-muted rounded-full flex justify-center"
-          >
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-1.5 h-3 bg-accent-cyan rounded-full mt-2"
-            />
-          </motion.div>
+            className="w-1.5 h-3 bg-accent-cyan rounded-full mt-2"
+          />
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

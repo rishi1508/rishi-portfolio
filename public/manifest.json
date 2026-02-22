@@ -1,0 +1,16 @@
+{
+  "name": "Rishi Mishra | DevOps Engineer",
+  "short_name": "Rishi Mishra",
+  "description": "DevOps Engineer specializing in cloud infrastructure, automation, and CI/CD pipelines.",
+  "start_url": "/rishi-portfolio/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#00d4ff",
+  "icons": [
+    {
+      "src": "/rishi-portfolio/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

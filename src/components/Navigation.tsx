@@ -12,6 +12,7 @@ const navItems = [
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,6 +20,32 @@ export default function Navigation() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Track active section using IntersectionObserver
+  useEffect(() => {
+    const sectionIds = navItems.map(item => item.href.slice(1));
+    const observers: IntersectionObserver[] = [];
+
+    sectionIds.forEach(id => {
+      const element = document.getElementById(id);
+      if (element) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                setActiveSection(id);
+              }
+            });
+          },
+          { rootMargin: '-40% 0px -60% 0px' }
+        );
+        observer.observe(element);
+        observers.push(observer);
+      }
+    });
+
+    return () => observers.forEach(obs => obs.disconnect());
   }, []);
 
   // Close mobile menu on Escape key
@@ -60,23 +87,32 @@ export default function Navigation() {
 
           {/* Desktop Navigation */}
           <ul className="hidden md:flex items-center gap-8">
-            {navItems.map((item, index) => (
-              <motion.li
-                key={item.name}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <a
-                  href={item.href}
-                  className="font-mono text-sm text-terminal-text hover:text-accent-cyan transition-colors relative group"
+            {navItems.map((item, index) => {
+              const isActive = activeSection === item.href.slice(1);
+              return (
+                <motion.li
+                  key={item.name}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
                 >
-                  <span className="text-accent-cyan mr-1">0{index + 1}.</span>
-                  {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-accent-cyan transition-all group-hover:w-full" />
-                </a>
-              </motion.li>
-            ))}
+                  <a
+                    href={item.href}
+                    className={`font-mono text-sm transition-colors relative group ${
+                      isActive ? 'text-accent-cyan' : 'text-terminal-text hover:text-accent-cyan'
+                    }`}
+                  >
+                    <span className="text-accent-cyan mr-1">0{index + 1}.</span>
+                    {item.name}
+                    <span 
+                      className={`absolute -bottom-1 left-0 h-px bg-accent-cyan transition-all ${
+                        isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                      }`} 
+                    />
+                  </a>
+                </motion.li>
+              );
+            })}
             <motion.li
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -140,23 +176,31 @@ export default function Navigation() {
               aria-label="Mobile navigation"
             >
               <ul className="flex flex-col gap-6">
-                {navItems.map((item, index) => (
-                  <motion.li
-                    key={item.name}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <a
-                      href={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="font-mono text-lg text-terminal-text hover:text-accent-cyan transition-colors block"
+                {navItems.map((item, index) => {
+                  const isActive = activeSection === item.href.slice(1);
+                  return (
+                    <motion.li
+                      key={item.name}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
                     >
-                      <span className="text-accent-cyan mr-2">0{index + 1}.</span>
-                      {item.name}
-                    </a>
-                  </motion.li>
-                ))}
+                      <a
+                        href={item.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`font-mono text-lg transition-colors block ${
+                          isActive ? 'text-accent-cyan' : 'text-terminal-text hover:text-accent-cyan'
+                        }`}
+                      >
+                        <span className="text-accent-cyan mr-2">0{index + 1}.</span>
+                        {item.name}
+                        {isActive && (
+                          <span className="ml-2 text-xs opacity-60">●</span>
+                        )}
+                      </a>
+                    </motion.li>
+                  );
+                })}
                 <motion.li
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}

@@ -84,7 +84,7 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
               {project.github && (
                 <a
                   href={project.github}
-                  target="_blank"
+                  target="_blank" rel="noopener noreferrer"
                   rel="noopener noreferrer"
                   className="text-terminal-muted hover:text-accent-cyan transition-colors"
                   aria-label="GitHub"
@@ -97,7 +97,7 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
               {project.demo && (
                 <a
                   href={project.demo}
-                  target="_blank"
+                  target="_blank" rel="noopener noreferrer"
                   rel="noopener noreferrer"
                   className="text-terminal-muted hover:text-accent-cyan transition-colors"
                   aria-label="Live Demo"
@@ -191,7 +191,7 @@ export default function Projects() {
             More projects on{' '}
             <a
               href="https://github.com/rishi1508"
-              target="_blank"
+              target="_blank" rel="noopener noreferrer"
               rel="noopener noreferrer"
               className="text-accent-cyan hover:underline"
             >

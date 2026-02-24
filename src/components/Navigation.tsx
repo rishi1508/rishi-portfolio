@@ -120,7 +120,7 @@ export default function Navigation() {
             >
               <a
                 href="/resume.pdf"
-                target="_blank"
+                target="_blank" rel="noopener noreferrer"
                 rel="noopener noreferrer"
                 className="btn-outline text-sm py-2 px-4"
               >
@@ -209,7 +209,7 @@ export default function Navigation() {
                 >
                   <a
                     href="/resume.pdf"
-                    target="_blank"
+                    target="_blank" rel="noopener noreferrer"
                     rel="noopener noreferrer"
                     className="btn-outline w-full justify-center"
                   >

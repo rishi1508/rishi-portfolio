@@ -107,13 +107,19 @@ export default function Contact() {
               <span className="text-terminal-muted">echo</span>{' '}
               <span className="text-accent-cyan">$LOCATION</span>
             </p>
-            <p className="text-terminal-text/70 pl-4">India</p>
+            <p className="text-terminal-text/70 pl-4">Jaipur, Rajasthan, India</p>
             <p className="mt-4">
               <span className="text-accent-green">$</span>{' '}
               <span className="text-terminal-muted">echo</span>{' '}
               <span className="text-accent-cyan">$STATUS</span>
             </p>
             <p className="text-accent-green pl-4">Open to opportunities</p>
+            <p className="mt-4">
+              <span className="text-accent-green">$</span>{' '}
+              <span className="text-terminal-muted">echo</span>{' '}
+              <span className="text-accent-cyan">$AVAILABILITY</span>
+            </p>
+            <p className="text-terminal-text/70 pl-4">Remote / Relocation</p>
           </div>
         </motion.div>
 

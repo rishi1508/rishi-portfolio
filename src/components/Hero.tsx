@@ -5,6 +5,7 @@ import { Icons } from './icons';
 const roles = [
   'DevOps Engineer',
   'Cloud Architect',
+  'SRE',
   'Automation Enthusiast',
   'Infrastructure Builder',
 ];
@@ -47,9 +48,10 @@ function TypewriterText({ texts }: { texts: string[] }) {
   }, [currentText, isDeleting, isPaused, currentIndex, texts]);
 
   return (
-    <span className="text-accent-cyan">
-      {currentText}
-      <span className="animate-blink">|</span>
+    <span className="text-accent-cyan" role="status" aria-label={texts[currentIndex]}>
+      <span aria-hidden="true">{currentText}</span>
+      <span className="animate-blink" aria-hidden="true">|</span>
+      <span className="sr-only">{texts[currentIndex]}</span>
     </span>
   );
 }

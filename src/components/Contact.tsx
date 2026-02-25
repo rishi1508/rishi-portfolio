@@ -128,7 +128,7 @@ export default function Contact() {
             <motion.a
               key={link.name}
               href={link.url}
-              target="_blank" rel="noopener noreferrer"
+              target="_blank"
               rel="noopener noreferrer me"
               initial={{ opacity: 0, scale: 0 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}

@@ -2,29 +2,46 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Page Not Found | Rishi Mishra" description="The page you're looking for doesn't exist.">
-  <main class="min-h-screen flex items-center justify-center px-6">
-    <div class="text-center">
-      <h1 class="text-8xl font-bold text-white/10 select-none">404</h1>
-      <h2 class="text-2xl font-semibold text-white mt-4">Page Not Found</h2>
-      <p class="text-white/60 mt-2 max-w-md mx-auto">
-        The page you're looking for doesn't exist or has been moved.
-      </p>
-      <a 
-        href="/" 
-        class="inline-flex items-center gap-2 mt-8 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-lg text-white transition-all duration-300"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-        </svg>
-        Back to Home
-      </a>
+<Layout title="404 — Page Not Found | Rishi Mishra" description="The page you're looking for doesn't exist.">
+  <main class="min-h-screen flex items-center justify-center px-6" id="main-content">
+    <div class="max-w-lg w-full">
+      <!-- Terminal Window -->
+      <div class="terminal-window">
+        <div class="flex items-center gap-2 px-4 py-3 border-b border-terminal-border">
+          <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+          <span class="ml-2 text-xs font-mono text-terminal-muted">bash — 404</span>
+        </div>
+        <div class="p-6 font-mono text-sm leading-relaxed">
+          <p class="text-terminal-muted">
+            <span class="text-accent-cyan">rishi@devops</span><span class="text-terminal-muted">:</span><span class="text-accent-purple">~</span><span class="text-terminal-muted">$ </span><span class="text-terminal-bright">cd /requested/page</span>
+          </p>
+          <p class="text-red-400 mt-2">
+            bash: cd: /requested/page: No such file or directory
+          </p>
+          <p class="text-terminal-muted mt-4">
+            <span class="text-accent-cyan">rishi@devops</span><span class="text-terminal-muted">:</span><span class="text-accent-purple">~</span><span class="text-terminal-muted">$ </span><span class="text-terminal-bright">echo $?</span>
+          </p>
+          <p class="text-yellow-400 mt-2">404</p>
+          <p class="text-terminal-muted mt-4">
+            <span class="text-accent-cyan">rishi@devops</span><span class="text-terminal-muted">:</span><span class="text-accent-purple">~</span><span class="text-terminal-muted">$ </span><span class="text-terminal-bright">echo "Looks like this page doesn't exist."</span>
+          </p>
+          <p class="text-terminal-text mt-2">Looks like this page doesn't exist.</p>
+          <p class="text-terminal-muted mt-4">
+            <span class="text-accent-cyan">rishi@devops</span><span class="text-terminal-muted">:</span><span class="text-accent-purple">~</span><span class="text-terminal-muted">$ </span><span class="text-terminal-bright">cd ~</span>
+          </p>
+          <a 
+            href="/"
+            class="inline-flex items-center gap-2 mt-6 px-5 py-2.5 bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 hover:border-accent-cyan/50 rounded-lg text-accent-cyan font-mono text-sm transition-all duration-300"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+            </svg>
+            cd /home
+          </a>
+        </div>
+      </div>
     </div>
   </main>
 </Layout>
-
-<style>
-  h1 {
-    text-shadow: 0 0 80px rgba(255, 255, 255, 0.1);
-  }
-</style>

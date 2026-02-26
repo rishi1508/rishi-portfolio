@@ -113,20 +113,6 @@ export default function Navigation() {
                 </motion.li>
               );
             })}
-            <motion.li
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <a
-                href="/resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-outline text-sm py-2 px-4"
-              >
-                Resume
-              </a>
-            </motion.li>
           </ul>
 
           {/* Mobile Menu Button */}
@@ -202,21 +188,6 @@ export default function Navigation() {
                     </motion.li>
                   );
                 })}
-                <motion.li
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="pt-4"
-                >
-                  <a
-                    href="/resume.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-outline w-full justify-center"
-                  >
-                    Resume
-                  </a>
-                </motion.li>
               </ul>
             </motion.nav>
           </motion.div>

@@ -135,6 +135,7 @@ export default function Navigation() {
             className="md:hidden relative w-8 h-8 flex flex-col justify-center items-center gap-1.5"
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMobileMenuOpen}
+            aria-haspopup="true"
             aria-controls="mobile-menu"
           >
             <motion.span

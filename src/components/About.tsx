@@ -50,7 +50,12 @@ export default function About() {
             </p>
             <p>
               Currently, I'm working at{' '}
-              <a href="#" className="link">
+              <a
+                href="https://www.wonderlendhubs.com"
+                className="link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Wonderlend Hubs
               </a>
               , where I focus on designing and implementing CI/CD pipelines, managing 

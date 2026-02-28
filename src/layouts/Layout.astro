@@ -73,11 +73,18 @@ const {
     </script>
   </head>
   <body class="min-h-screen overflow-x-hidden">
+    <!-- Skip to content (accessibility) -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-cyan-500 focus:text-gray-900 focus:rounded-md focus:font-semibold focus:outline-none">
+      Skip to main content
+    </a>
+
     <!-- Noise overlay -->
     <div class="fixed inset-0 pointer-events-none noise z-50"></div>
     
     <!-- Main content -->
-    <slot />
+    <main id="main-content">
+      <slot />
+    </main>
     
     <!-- Smooth scroll anchor handling -->
     <script>

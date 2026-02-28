@@ -18,7 +18,7 @@ const jobs: Job[] = [
     company: 'Wonderlend Hubs',
     companyUrl: 'https://wonderlendhubs.com',
     location: 'India',
-    period: 'Present',
+    period: 'June 2025 — Present',
     description: [
       'Architected and implemented CI/CD pipelines using GitLab CI, reducing deployment time by 99% (from hours to minutes)',
       'Designed and deployed cloud infrastructure on AWS using Terraform, serving 1000+ concurrent users',

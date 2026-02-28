@@ -14,7 +14,7 @@ interface Job {
 
 const jobs: Job[] = [
   {
-    title: 'DevOps Engineer',
+    title: 'SRE / Automation Engineer',
     company: 'Wonderlend Hubs',
     companyUrl: 'https://wonderlendhubs.com',
     location: 'India',
@@ -159,7 +159,7 @@ export default function Experience() {
               <p>
                 <span className="text-accent-green">abc1234</span>{' '}
                 <span className="text-terminal-muted">(HEAD)</span>{' '}
-                DevOps Engineer @ Wonderlend Hubs
+                SRE / Automation Engineer @ Wonderlend Hubs
               </p>
               <p>
                 <span className="text-accent-orange">def5678</span>{' '}

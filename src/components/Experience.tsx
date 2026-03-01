@@ -96,7 +96,7 @@ export default function Experience() {
                       {job.companyUrl ? (
                         <a
                           href={job.companyUrl}
-                          target="_blank" rel="noopener noreferrer"
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="hover:underline underline-offset-4"
                         >

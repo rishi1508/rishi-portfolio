@@ -119,7 +119,7 @@ export default function Contact() {
               <span className="text-terminal-muted">echo</span>{' '}
               <span className="text-accent-cyan">$AVAILABILITY</span>
             </p>
-            <p className="text-terminal-text/70 pl-4">Remote / Relocation</p>
+            <p className="text-terminal-text/70 pl-4">Remote / EU Relocation</p>
           </div>
         </motion.div>
 

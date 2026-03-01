@@ -42,8 +42,8 @@ export default function About() {
             className="md:col-span-2 space-y-4 text-terminal-text/80 text-lg leading-relaxed"
           >
             <p>
-              Hello! I'm Rishi, a DevOps Engineer passionate about building robust, 
-              scalable infrastructure and automating everything that can be automated. 
+              Hello! I'm Rishi, an SRE and Automation Engineer passionate about building 
+              robust, scalable infrastructure and automating everything that can be automated. 
               My journey in tech started with a curiosity about how large-scale systems 
               work behind the scenes, which naturally led me to the world of cloud 
               computing and infrastructure automation.
@@ -103,7 +103,7 @@ export default function About() {
                 <div className="bg-terminal-surface rounded-lg overflow-hidden aspect-square">
                   <img 
                     src="/rishi-portfolio/rishi-photo.jpg" 
-                    alt="Rishi Mishra - DevOps Engineer"
+                    alt="Rishi Mishra - SRE & Automation Engineer"
                     loading="lazy"
                     decoding="async"
                     width="400"

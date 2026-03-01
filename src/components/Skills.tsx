@@ -88,7 +88,7 @@ const stats = [
   { value: '500+', label: 'Deployments', icon: <Icons.Rocket /> },
   { value: '99.9%', label: 'Uptime', icon: <Icons.Clock /> },
   { value: '99%', label: 'Time Saved', icon: <Icons.Lightning /> },
-  { value: '1+', label: 'Years Exp.', icon: <Icons.Calendar /> },
+  { value: '6', label: 'GitHub Projects', icon: <Icons.Calendar /> },
 ];
 
 export default function Skills() {

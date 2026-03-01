@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, Fragment } from 'react';
 import type { ReactNode } from 'react';
 import { Icons } from './icons';
 
@@ -128,54 +128,61 @@ export default function Skills() {
             
             {/* Pipeline stages - Vertical on mobile, horizontal on desktop */}
             <div className="p-4 md:p-8">
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 md:gap-2">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 md:gap-0">
                 {pipelineStages.map((stage, stageIndex) => (
-                  <div key={stage.name} className="flex md:flex-col items-start md:items-center gap-4 md:gap-0 md:flex-1">
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                      transition={{ duration: 0.4, delay: 0.2 + stageIndex * 0.15 }}
-                      className="flex flex-col items-center shrink-0"
-                    >
-                      {/* Stage icon */}
-                      <div className={`pipeline-node bg-gradient-to-br ${stage.color}`}>
-                        <span className="text-terminal-bright w-6 h-6 block">{stage.icon}</span>
+                  <Fragment key={stage.name}>
+                    <div className="flex md:flex-col items-start md:items-center gap-4 md:gap-0 md:flex-1">
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                        transition={{ duration: 0.4, delay: 0.2 + stageIndex * 0.15 }}
+                        className="flex flex-col items-center shrink-0"
+                      >
+                        {/* Stage icon */}
+                        <div className={`pipeline-node bg-gradient-to-br ${stage.color}`}>
+                          <span className="text-terminal-bright w-6 h-6 block">{stage.icon}</span>
+                        </div>
+                        <span className="mt-2 font-mono text-sm text-terminal-bright">
+                          {stage.name}
+                        </span>
+                      </motion.div>
+
+                      {/* Skills - horizontal on mobile, vertical on desktop */}
+                      <div className="flex flex-wrap md:flex-col gap-2 md:mt-4">
+                        {stage.skills.map((skill, skillIndex) => (
+                          <motion.div
+                            key={skill.name}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={isInView ? { opacity: 1, x: 0 } : {}}
+                            transition={{ 
+                              duration: 0.3, 
+                              delay: 0.4 + stageIndex * 0.15 + skillIndex * 0.1 
+                            }}
+                            className="flex items-center gap-2 text-sm font-mono text-terminal-text/80 bg-terminal-bg/50 md:bg-transparent px-2 py-1 md:p-0 rounded"
+                          >
+                            <span className="text-accent-cyan w-4 h-4 block shrink-0">{skill.icon}</span>
+                            <span>{skill.name}</span>
+                          </motion.div>
+                        ))}
                       </div>
-                      <span className="mt-2 font-mono text-sm text-terminal-bright">
-                        {stage.name}
-                      </span>
-                    </motion.div>
-                    
-                    {/* Skills - horizontal on mobile, vertical on desktop */}
-                    <div className="flex flex-wrap md:flex-col gap-2 md:mt-4">
-                      {stage.skills.map((skill, skillIndex) => (
-                        <motion.div
-                          key={skill.name}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={isInView ? { opacity: 1, x: 0 } : {}}
-                          transition={{ 
-                            duration: 0.3, 
-                            delay: 0.4 + stageIndex * 0.15 + skillIndex * 0.1 
-                          }}
-                          className="flex items-center gap-2 text-sm font-mono text-terminal-text/80 bg-terminal-bg/50 md:bg-transparent px-2 py-1 md:p-0 rounded"
-                        >
-                          <span className="text-accent-cyan w-4 h-4 block shrink-0">{skill.icon}</span>
-                          <span>{skill.name}</span>
-                        </motion.div>
-                      ))}
                     </div>
 
-                    {/* Connector - only on desktop */}
+                    {/* Animated connector between stages — desktop only */}
                     {stageIndex < pipelineStages.length - 1 && (
                       <motion.div
-                        initial={{ scaleX: 0 }}
-                        animate={isInView ? { scaleX: 1 } : {}}
-                        transition={{ duration: 0.4, delay: 0.3 + stageIndex * 0.15 }}
-                        className="hidden md:block pipeline-connector origin-left absolute right-0 top-1/2"
-                        style={{ display: 'none' }}
-                      />
+                        initial={{ opacity: 0, scaleX: 0 }}
+                        animate={isInView ? { opacity: 1, scaleX: 1 } : {}}
+                        transition={{ duration: 0.4, delay: 0.35 + stageIndex * 0.15 }}
+                        className="hidden md:flex items-center self-start mt-7 shrink-0 origin-left"
+                        aria-hidden="true"
+                      >
+                        <div className="pipeline-connector" />
+                        <svg width="6" height="8" viewBox="0 0 6 8" fill="none" className="text-accent-cyan/50 -ml-px">
+                          <path d="M0 0L6 4L0 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </motion.div>
                     )}
-                  </div>
+                  </Fragment>
                 ))}
               </div>
             </div>

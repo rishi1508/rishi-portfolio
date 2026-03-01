@@ -4,7 +4,7 @@ import { Icons } from './icons';
 
 const roles = [
   'DevOps Engineer',
-  'Platform Engineer',
+  'Cloud Architect',
   'SRE',
   'Automation Enthusiast',
   'Infrastructure Builder',

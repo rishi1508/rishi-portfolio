@@ -1,16 +1,12 @@
 {
-  "name": "Rishi Mishra | SRE & Automation Engineer",
+  "name": "Rishi Mishra, Forward Deployed Engineer",
   "short_name": "Rishi Mishra",
-  "description": "SRE & Automation Engineer specializing in cloud infrastructure, automation, and CI/CD pipelines.",
+  "description": "Rishi Mishra builds AI agents and internal tools at WonderLend Hubs, and works with the teams using them until they actually help.",
   "start_url": "/rishi-portfolio/",
-  "display": "standalone",
-  "background_color": "#0a0a0f",
-  "theme_color": "#00d4ff",
+  "display": "browser",
+  "background_color": "#E8EEF6",
+  "theme_color": "#13254A",
   "icons": [
-    {
-      "src": "/rishi-portfolio/apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png"
-    }
+    { "src": "/rishi-portfolio/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
   ]
 }

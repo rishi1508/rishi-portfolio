@@ -1,178 +1,49 @@
-# Rishi Mishra — Portfolio Website
+# Rishi Mishra, portfolio
 
-A modern, responsive portfolio website built with Astro, React, Tailwind CSS, and Framer Motion. Features a terminal-inspired dark theme with smooth animations and a DevOps aesthetic.
+https://rishi1508.github.io/rishi-portfolio/
 
-![Portfolio Preview](./preview.png)
+A single long page in a chaptered editorial layout: a title page, how the work
+usually starts, the work in date order, an illustrated walk through what a
+read-only agent does with an alarm, how I build, recognition, and a colophon.
 
-## ✨ Features
+## Stack
 
-- **🌙 Dark Mode Default** — Terminal-inspired aesthetic perfect for developers
-- **⚡ Blazing Fast** — Built with Astro for optimal performance
-- **🎭 Smooth Animations** — Framer Motion for delightful interactions
-- **📱 Fully Responsive** — Looks great on all devices
-- **🔧 DevOps Theme** — CI/CD pipeline visualization, terminal elements
-- **♿ Accessible** — Semantic HTML, ARIA labels, keyboard navigation
-- **🚀 Deploy Ready** — Configured for Vercel deployment
+- [Astro](https://astro.build/) 5, static output, deployed to GitHub Pages by
+  `.github/workflows/deploy.yml` on every push to `main`.
+- Plain CSS in `src/styles/global.css` (Tailwind is wired in but the page uses
+  custom properties and hand-written rules).
+- Scroll behaviour comes from the unmodified
+  [scroll-craft](https://github.com/nateherkai/scroll-craft) engine
+  (`src/vendor/scrollcraft/`, MIT). Page-specific behaviour (pin fallbacks,
+  timeline line, folio, access ledger) is in `src/scripts/page.js`.
+- Fonts: Bricolage Grotesque and Literata, self-hosted, subset to Latin and
+  trimmed to the axis ranges the page uses (`public/fonts/`, OFL).
+- No framework runtime is shipped. About 24 KB of minified JS in total.
 
-## 🛠️ Tech Stack
+## Content rules
 
-- **Framework:** [Astro](https://astro.build/) v5
-- **UI Library:** [React](https://reactjs.org/) v18
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/) v3
-- **Animations:** [Framer Motion](https://www.framer.com/motion/) v11
-- **Deployment:** [Vercel](https://vercel.com/)
-- **Language:** TypeScript
+Every figure on the page is a measured number. Lists run oldest first. No em or
+en dashes in copy. The alarm sequence is labelled as an illustrative example and
+uses invented names.
 
-## 📦 Project Structure
-
-```
-site/
-├── public/
-│   ├── favicon.svg
-│   ├── og-image.png
-│   └── resume.pdf          # Add your resume here
-├── src/
-│   ├── components/
-│   │   ├── Navigation.tsx
-│   │   ├── Hero.tsx
-│   │   ├── About.tsx
-│   │   ├── Skills.tsx
-│   │   ├── Experience.tsx
-│   │   ├── Projects.tsx
-│   │   └── Contact.tsx
-│   ├── layouts/
-│   │   └── Layout.astro
-│   ├── pages/
-│   │   └── index.astro
-│   └── styles/
-│       └── global.css
-├── astro.config.mjs
-├── tailwind.config.mjs
-├── tsconfig.json
-└── package.json
-```
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Node.js 18+ 
-- npm or pnpm
-
-### Installation
+## Develop
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd site
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-Visit `http://localhost:4321` to see your portfolio!
-
-### Build for Production
-
-```bash
-# Create production build
-npm run build
-
-# Preview production build locally
+npm ci
+npm run dev      # http://localhost:4321/rishi-portfolio/
+npm run build    # astro check, then a static build into dist/
 npm run preview
 ```
 
-## 🌐 Deployment
+The site is served under `/rishi-portfolio/`, so internal links use
+`import.meta.env.BASE_URL`.
 
-### Vercel (Recommended)
+## Accessibility and motion
 
-1. Push your code to GitHub
-2. Import the project in [Vercel Dashboard](https://vercel.com/new)
-3. Vercel will auto-detect Astro and configure build settings
-4. Click Deploy!
-
-Or use the Vercel CLI:
-
-```bash
-npm i -g vercel
-vercel
-```
-
-### Other Platforms
-
-The site can be deployed to any static hosting:
-
-- **Netlify:** Auto-detects Astro projects
-- **GitHub Pages:** Use the `@astrojs/github-pages` adapter
-- **Cloudflare Pages:** Works out of the box
-
-## 📝 Customization
-
-### Update Personal Info
-
-1. **Hero Section** (`src/components/Hero.tsx`)
-   - Update name, roles, and description
-
-2. **About Section** (`src/components/About.tsx`)
-   - Edit bio paragraphs and technology list
-
-3. **Experience** (`src/components/Experience.tsx`)
-   - Add/modify job entries in the `jobs` array
-
-4. **Projects** (`src/components/Projects.tsx`)
-   - Update the `projects` array with your work
-
-5. **Contact** (`src/components/Contact.tsx`)
-   - Update email and social links
-
-### Customize Colors
-
-Edit `tailwind.config.mjs` to change the color scheme:
-
-```javascript
-colors: {
-  terminal: {
-    bg: '#0a0e14',     // Background
-    surface: '#0d1117', // Card backgrounds
-    // ... other colors
-  },
-  accent: {
-    cyan: '#00d4ff',    // Primary accent
-    purple: '#a855f7',  // Secondary accent
-    // ... other accents
-  },
-}
-```
-
-### Add Resume
-
-Place your resume PDF in the `public/` folder as `resume.pdf`.
-
-### Add Profile Image
-
-Replace the placeholder in `About.tsx` with your image:
-
-```tsx
-<img 
-  src="/your-photo.jpg" 
-  alt="Rishi Mishra" 
-  className="rounded-lg"
-/>
-```
-
-## 🎨 Design Credits
-
-Inspired by:
-- [brittanychiang.com](https://brittanychiang.com)
-- [leerob.io](https://leerob.io)
-
-## 📄 License
-
-MIT License — feel free to use this as a template for your own portfolio!
-
----
-
-Built with ❤️ by Rishi Mishra
+- `prefers-reduced-motion: reduce` removes all pinning; the alarm sequence and
+  every other section render as static content.
+- Below 768px the alarm sequence is a stacked list. Any pinned section that
+  would not fit the viewport is shown unpinned.
+- Without JavaScript, all content is visible.
+- Light and dark themes follow the system setting, with a toggle that is
+  remembered per browser.

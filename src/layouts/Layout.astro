@@ -1,109 +1,152 @@
 ---
+import '../vendor/scrollcraft/scrollcraft.css';
+import '../styles/global.css';
+
 interface Props {
   title?: string;
   description?: string;
+  /** The 404 page has no chapters, so it skips the folio and the engine. */
+  plain?: boolean;
 }
 
-const { 
-  title = "Rishi Mishra | DevOps Engineer",
-  description = "DevOps Engineer specializing in cloud infrastructure, automation, and CI/CD pipelines. Building scalable solutions at Wonderlend Hubs."
+const {
+  title = 'Rishi Mishra, Forward Deployed Engineer',
+  description = 'Rishi Mishra builds AI agents and internal tools at WonderLend Hubs, and works with the teams using them until they actually help.',
+  plain = false,
 } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const siteUrl = 'https://rishi1508.github.io/rishi-portfolio/';
+const nav = [
+  { href: `${base}#work`, label: 'Work' },
+  { href: `${base}#approach`, label: 'Approach' },
+  { href: `${base}#recognition`, label: 'Recognition' },
+  { href: `${base}#contact`, label: 'Contact' },
+];
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content="DevOps Engineer, Cloud Infrastructure, AWS, Terraform, Docker, CI/CD, Kubernetes, Automation, SRE, Platform Engineer" />
     <meta name="author" content="Rishi Mishra" />
-    <meta name="robots" content="index, follow" />
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://rishi1508.github.io/rishi-portfolio" />
-    
-    <!-- Open Graph -->
+    <link rel="canonical" href={siteUrl} />
+
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://rishi1508.github.io/rishi-portfolio" />
-    <meta property="og:image" content="https://rishi1508.github.io/rishi-portfolio/og-image.png" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:image" content={`${siteUrl}og-image.png`} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    
-    <!-- Twitter -->
+    <meta property="og:image:alt" content="Rishi Mishra, Forward Deployed Engineer" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="https://rishi1508.github.io/rishi-portfolio/og-image.png" />
-    
-    <!-- Favicon & Theme -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#0a0a0f" />
-    <meta name="msapplication-TileColor" content="#0a0a0f" />
-    
-    <!-- Preconnect to fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    
-    <title>{title}</title>
-    
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Rishi Mishra",
-      "jobTitle": "DevOps Engineer",
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Wonderlend Hubs"
-      },
-      "url": "https://rishi1508.github.io/rishi-portfolio",
-      "sameAs": [
-        "https://github.com/rishi1508",
-        "https://linkedin.com/in/rishimishra1508"
-      ],
-      "knowsAbout": ["DevOps", "AWS", "Terraform", "Docker", "CI/CD", "Kubernetes", "Cloud Infrastructure"]
-    }
-    </script>
-  </head>
-  <body class="min-h-screen overflow-x-hidden">
-    <!-- Skip to content (accessibility) -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-cyan-500 focus:text-gray-900 focus:rounded-md focus:font-semibold focus:outline-none">
-      Skip to main content
-    </a>
+    <meta name="twitter:image" content={`${siteUrl}og-image.png`} />
 
-    <!-- Noise overlay -->
-    <div class="fixed inset-0 pointer-events-none noise z-50"></div>
-    
-    <!-- Main content -->
-    <main id="main-content">
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+    <link rel="manifest" href={`${base}manifest.json`} />
+    <meta name="theme-color" content="#E8EEF6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0F1A33" media="(prefers-color-scheme: dark)" />
+
+    <link rel="preload" href={`${base}fonts/bricolage-display.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={`${base}fonts/literata-text.woff2`} as="font" type="font/woff2" crossorigin />
+    <style is:inline set:html={`
+      @font-face {
+        font-family: 'Bricolage Grotesque';
+        src: url('${base}fonts/bricolage-display.woff2') format('woff2-variations');
+        font-weight: 500 700; font-stretch: 75% 100%; font-style: normal; font-display: swap;
+      }
+      @font-face {
+        font-family: 'Literata';
+        src: url('${base}fonts/literata-text.woff2') format('woff2-variations');
+        font-weight: 400 600; font-style: normal; font-display: swap;
+      }
+    `} />
+
+    <!-- Theme before first paint, and a js flag so no-JS visitors see everything. -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'Rishi Mishra',
+      jobTitle: 'Forward Deployed Engineer, Agentic Initiatives',
+      worksFor: { '@type': 'Organization', name: 'WonderLend Hubs' },
+      address: { '@type': 'PostalAddress', addressLocality: 'Jaipur', addressCountry: 'IN' },
+      alumniOf: { '@type': 'CollegeOrUniversity', name: 'MBM Engineering College, Jodhpur' },
+      url: siteUrl,
+      email: 'mailto:rishimishra1508@gmail.com',
+      sameAs: ['https://github.com/rishi1508', 'https://www.linkedin.com/in/rishimishra1508'],
+    })} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="folio">
+      <a class="folio__name" href={`${base}#top`}>Rishi Mishra</a>
+      {!plain && <p class="folio__chapter" aria-hidden="true" data-folio>&nbsp;</p>}
+      <button class="folio__menu" type="button" aria-expanded="false" aria-controls="site-nav" data-menu>Menu</button>
+      <div class="folio__panel" id="site-nav" data-menu-panel>
+        <nav aria-label="Primary">
+          <ul class="folio__links">
+            {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+          </ul>
+        </nav>
+        <button class="theme-toggle" type="button" aria-pressed="false" data-theme-toggle>
+          Dark theme
+        </button>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
       <slot />
     </main>
-    
-    <!-- Smooth scroll anchor handling -->
-    <script>
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e: Event) {
-          e.preventDefault();
-          const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href');
-          if (href) {
-            const target = document.querySelector(href);
-            if (target) {
-              target.scrollIntoView({ behavior: 'smooth' });
-            }
-          }
+
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        var mq = matchMedia('(prefers-color-scheme: dark)');
+        var btn = document.querySelector('[data-theme-toggle]');
+        function isDark() {
+          var t = root.getAttribute('data-theme');
+          return t ? t === 'dark' : mq.matches;
+        }
+        function sync() { btn.setAttribute('aria-pressed', String(isDark())); }
+        btn.addEventListener('click', function () {
+          var next = isDark() ? 'light' : 'dark';
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme', next); } catch (e) {}
+          sync();
         });
-      });
+        mq.addEventListener('change', sync);
+        sync();
+
+        // Small screens: a plain disclosure menu.
+        var menu = document.querySelector('[data-menu]');
+        var panel = document.querySelector('[data-menu-panel]');
+        function close() { menu.setAttribute('aria-expanded', 'false'); panel.classList.remove('is-open'); }
+        menu.addEventListener('click', function () {
+          var open = menu.getAttribute('aria-expanded') !== 'true';
+          menu.setAttribute('aria-expanded', String(open));
+          panel.classList.toggle('is-open', open);
+        });
+        panel.addEventListener('click', function (e) { if (e.target.closest('a')) close(); });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && menu.getAttribute('aria-expanded') === 'true') { close(); menu.focus(); }
+        });
+      })();
     </script>
   </body>
 </html>
-
-<style is:global>
-  @import '../styles/global.css';
-</style>

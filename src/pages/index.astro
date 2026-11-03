@@ -1,29 +1,345 @@
 ---
+import { execSync } from 'node:child_process';
 import Layout from '../layouts/Layout.astro';
-import Navigation from '../components/Navigation';
-import Hero from '../components/Hero';
-import About from '../components/About';
-import Skills from '../components/Skills';
-import Experience from '../components/Experience';
-import Projects from '../components/Projects';
-import Contact from '../components/Contact';
-import BackToTop from '../components/BackToTop';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
+// The colophon names the commit this page was built from. In CI that is
+// GITHUB_SHA; locally it falls back to git.
+let sha = process.env.GITHUB_SHA ?? '';
+if (!sha) {
+  try { sha = execSync('git rev-parse HEAD').toString().trim(); } catch { sha = ''; }
+}
+const shortSha = sha.slice(0, 7);
+const builtOn = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata' });
+
+type Entry = {
+  period: string;
+  name: string;
+  started?: string;
+  built?: string;
+  changed?: string;
+  now?: string;
+  aside?: string;
+  count?: boolean;
+};
+
+// Oldest first. Every figure here is from the verified list in the brief.
+const work: Entry[] = [
+  {
+    period: 'Aug to Sep 2025',
+    name: 'Changelog validator',
+    started: 'Malformed deployment changelogs kept breaking deploys.',
+    built: 'Type and query validation, with error previews, inside the changelog tool developers already used.',
+    changed: 'Malformed changelogs went from 10 to 15 a month to under 1.',
+  },
+  {
+    period: 'Nov 2025',
+    name: 'Java Lambda automation',
+    started: 'Our deployment automation only understood Python.',
+    built: 'Extended it to Java Lambdas, with a Maven CI pipeline and a way to import existing functions into Terraform state. Tenant lists now load live instead of being hardcoded.',
+    changed: 'Java services deploy through the same path as everything else.',
+  },
+  {
+    period: 'Jan to Apr 2026',
+    name: 'TenantHub',
+    started: 'Setting up a new tenant took about a week of one person’s time.',
+    built: 'One-click tenant setup, a validator and a decommissioner, provisioning across 17 AWS service modules. Live in staging from January and in production from April 2026.',
+    changed: 'About 1 week down to 15 to 20 minutes.',
+    aside: 'Along the way I found the validator was silently swallowing AWS auth failures and reporting “0 issues” on broken tenants, so I added extraction-error tracking across all 12 extractors and comparators.',
+  },
+  {
+    period: 'May 2026',
+    name: 'Claude seat bot',
+    started: 'Leads were allocating shared Claude seats by hand.',
+    built: 'A Slack bot with scheduling, queuing and priority-based assignment.',
+    changed: 'Around 1,500 bookings a month, with no manual allocation.',
+  },
+  {
+    period: 'May to Jun 2026',
+    name: 'DevOps Bot',
+    started: 'Every alarm paged a human, who ran the same checks before they could act.',
+    built: 'An always-on AI assistant in Slack with read-only access to infrastructure, narrowly scoped Jira write, role-based access and an audit trail. In production in May, company-wide in June 2026.',
+    count: true,
+  },
+  {
+    period: 'Sep 2026',
+    name: 'AuditHub',
+    started: 'Client security questionnaires were answered by hand, from scratch, every time.',
+    built: 'An AI-assisted portal behind SSO, with role-based access, AI drafting, review and a knowledge base.',
+    changed: 'Answers start from a reviewed draft instead of a blank page.',
+  },
+  {
+    period: 'Sep to Oct 2026',
+    name: 'A shared agent framework',
+    started: 'Teams were starting to build agents separately, each re-solving security, memory, cost and audit.',
+    built: 'Helped set the company’s direction for how agents get built, then built the foundation of a shared framework where an agent is a configuration file, not code.',
+    changed: '28 modules and 325 tests, with no third-party dependencies in its core. Also the company’s first measured cost baseline for running agents.',
+  },
+  {
+    period: 'Nov 2026 onward',
+    name: 'Forward Deployed Engineer',
+    now: 'I moved into the Founder’s Office to take agents to the teams that need them, and to bring back evidence of what works.',
+  },
+];
 ---
 
 <Layout>
-  <!-- Skip to main content link for accessibility -->
-  <a href="#main-content" class="skip-link">Skip to main content</a>
-  
-  <Navigation client:load />
-  
-  <main id="main-content">
-    <Hero client:load />
-    <About client:visible />
-    <Skills client:visible />
-    <Experience client:visible />
-    <Projects client:visible />
-    <Contact client:visible />
-  </main>
-  
-  <BackToTop client:load />
+  <!-- 1. Title page -->
+  <section class="chapter chapter--title" id="top" data-folio-title="Rishi Mishra">
+    <div class="title-page">
+      <h1 class="title-page__name">Rishi<br />Mishra</h1>
+      <div class="title-page__follow">
+        <p class="title-page__role">Forward Deployed Engineer, Agentic Initiatives at WonderLend Hubs</p>
+        <p class="title-page__lede">I build AI agents and internal tools, then stay with the teams using them until they actually help.</p>
+        <p class="title-page__actions">
+          <a class="button" href="#work">See the work</a>
+          <a class="text-link" href="mailto:rishimishra1508@gmail.com">Email me</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. How it usually starts: pinned, the irritations arrive one at a time -->
+  <section class="chapter chapter--start" id="start" data-sc-act="pin" data-sc-span="2.4" data-folio-title="How it usually starts">
+    <div data-sc-stage class="start">
+      <figure class="start__portrait">
+        <img
+          src={`${base}rishi-portrait-240.webp`}
+          srcset={`${base}rishi-portrait-240.webp 240w, ${base}rishi-portrait-480.webp 480w`}
+          sizes="(min-width: 768px) 200px, 112px"
+          width="240" height="300"
+          alt="Rishi Mishra, in a white t-shirt, leaning on a wooden railing outdoors."
+          loading="lazy" decoding="async"
+        />
+      </figure>
+      <div class="start__copy">
+        <h2 class="heading">How it usually starts</h2>
+        <p class="start__para">
+          <span>Almost none of this started out looking like innovation. It started as small irritations:</span>
+          <span class="start__item" data-sc-cue="0.08 1 0.12 0">a deployment step that kept going wrong,</span>
+          <span class="start__item" data-sc-cue="0.24 1 0.12 0">an alert that always needed the same three checks,</span>
+          <span class="start__item" data-sc-cue="0.40 1 0.12 0">a manual process everyone had simply accepted.</span>
+          <span class="start__turn" data-sc-cue="0.58 1 0.12 0">Each one looked too small to be a project. The hard part was never the technology. It was understanding the problem properly, sitting with the people who had it, and building something they would actually use.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. The work, oldest first -->
+  <section class="chapter chapter--work" id="work" data-folio-title="The work, in order">
+    <div class="wrap">
+      <h2 class="heading">The work, in order</h2>
+      <p class="intro">Everything since I joined WonderLend Hubs in June 2025, oldest first. Associate DevOps Engineer until October 2026, Forward Deployed Engineer since November.</p>
+      <ol class="timeline" data-timeline>
+        {work.map((e, i) => (
+          <li class:list={['entry', { 'entry--now': i === work.length - 1 }]} data-entry>
+            <p class="entry__period"><time>{e.period}</time></p>
+            <div class="entry__body" data-sc-in>
+              <h3 class="entry__name">{e.name}</h3>
+              {e.now ? (
+                <p class="entry__now">{e.now}</p>
+              ) : (
+                <dl class="entry__facts">
+                  <div><dt>Started from</dt><dd>{e.started}</dd></div>
+                  <div><dt>Built</dt><dd>{e.built}</dd></div>
+                  <div>
+                    <dt>Changed</dt>
+                    {e.count ? (
+                      <dd>
+                        <span class="num">1,401</span> alarms diagnosed and <span class="num">69</span> colleagues served. Triage starts with the evidence already gathered. <a class="text-link" href="#alarm">What it does with an alarm</a>
+                      </dd>
+                    ) : (
+                      <dd>{e.changed}</dd>
+                    )}
+                  </div>
+                </dl>
+              )}
+              {e.aside && <p class="entry__aside">{e.aside}</p>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 4 + 5. Intertitle, then the alarm (the peak) -->
+  <section class="chapter chapter--night" id="alarm" data-folio-title="An alarm, step by step">
+    <div class="intertitle" data-sc-act="flow">
+      <div class="intertitle__ground" data-sc-reveal="up" data-sc-reveal-at="0.02 0.32" aria-hidden="true"></div>
+      <div class="intertitle__copy">
+        <h2 class="intertitle__title">What a read-only agent does with an alarm</h2>
+        <p class="intertitle__note">An illustrative example, not a real incident. Every name and value in it is invented.</p>
+      </div>
+    </div>
+
+    <div class="alarm" data-sc-act="pin" data-sc-span="4.2" data-alarm>
+      <div data-sc-stage class="alarm__stage">
+        <div class="alarm__thread">
+          <p class="alarm__boundary" aria-hidden="true"><span>Agent: read access</span><span>People: can act</span></p>
+          <ol class="steps">
+            <li class="step step--alarm">
+              <div class="msg msg--system">
+                <p class="msg__from">Alarm, staging</p>
+                <p class="msg__text">Error rate above threshold on a payments function, staging.</p>
+              </div>
+              <p class="step__caption" data-sc-cue="0 0.17 0 0.3">The alarm goes to the agent first.</p>
+            </li>
+            <li class="step">
+              <div class="msg msg--agent" data-sc-cue="0.15 1 0.12 0">
+                <p class="msg__from">Agent</p>
+                <p class="msg__text">Reading recent logs for the payments function.</p>
+                <pre class="evidence" aria-label="Log excerpt"><code>ERROR  card-service call timed out
+ERROR  card-service call timed out
+WARN   retry budget exhausted</code></pre>
+              </div>
+              <p class="step__caption" data-sc-cue="0.15 0.37">It can read logs, metrics and config. It cannot change any of them.</p>
+            </li>
+            <li class="step">
+              <div class="msg msg--agent" data-sc-cue="0.35 1 0.12 0">
+                <p class="msg__from">Agent</p>
+                <p class="msg__text">The last deployment changed one setting.</p>
+                <pre class="evidence" aria-label="Configuration change"><code><span class="diff-del">- card_service.timeout_profile: standard</span>
+<span class="diff-add">+ card_service.timeout_profile: aggressive</span></code></pre>
+              </div>
+              <p class="step__caption" data-sc-cue="0.35 0.57">It looks where a person would look first.</p>
+            </li>
+            <li class="step">
+              <div class="msg msg--agent msg--summary" data-sc-cue="0.55 1 0.12 0">
+                <p class="msg__from">Agent, summary</p>
+                <p class="msg__text">Likely cause: the timeout profile changed in the last deployment, and card-service calls started timing out right after it went out.</p>
+                <p class="msg__attached">Evidence attached: log excerpt, configuration change, error rate.</p>
+                <p class="msg__blocked">Suggested next step: revert the setting. Needs a person.</p>
+              </div>
+              <p class="step__caption" data-sc-cue="0.55 0.77">The summary arrives with the evidence attached, so triage starts from the answer.</p>
+            </li>
+            <li class="step step--human">
+              <div class="msg msg--human" data-sc-cue="0.75 1 0.12 0">
+                <p class="msg__from">On-call engineer</p>
+                <p class="msg__text">Agreed. Reverting it now.<span class="caret" aria-hidden="true"></span></p>
+              </div>
+              <p class="step__caption" data-sc-cue="0.75 1 0.12 0">A person makes the fix. That is by design.</p>
+            </li>
+          </ol>
+        </div>
+
+        <!-- The signature: an access ledger on the permission boundary, driven by the act's progress. -->
+        <div class="ledger" aria-hidden="true" data-ledger>
+          <p class="ledger__title">Access ledger</p>
+          <ol class="ledger__rows">
+            <li data-at="0.18" data-who="agent"><span class="ledger__act">read logs</span><span class="ledger__state" data-on="allowed">waiting</span></li>
+            <li data-at="0.38" data-who="agent"><span class="ledger__act">read deploy history</span><span class="ledger__state" data-on="allowed">waiting</span></li>
+            <li data-at="0.58" data-who="agent" data-deny><span class="ledger__act">change config</span><span class="ledger__state" data-on="not permitted">waiting</span></li>
+            <li data-at="0.78" data-who="person"><span class="ledger__act">revert setting</span><span class="ledger__state" data-on="done by a person">waiting</span></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. How I build -->
+  <section class="chapter chapter--approach" id="approach" data-sc-act="flow" data-folio-title="How I build">
+    <div class="wrap">
+      <h2 class="heading">How I build</h2>
+      <ul class="principles">
+        <li>
+          <h3 class="principle__head" data-sc-cue="0.12" data-sc-kinetic="lines">Built to be adopted, not tolerated.</h3>
+          <p>If people route around a tool, it has failed, however clever it is.</p>
+        </li>
+        <li>
+          <h3 class="principle__head" data-sc-cue="0.22" data-sc-kinetic="lines">Guardrails in the system, not in the prompt.</h3>
+          <p>Permissions, scopes and audit trails do the safety work. A model can be talked out of a rule in a prompt; it cannot talk its way past a permission it does not have.</p>
+        </li>
+        <li>
+          <h3 class="principle__head" data-sc-cue="0.32" data-sc-kinetic="lines">Numbers I can defend.</h3>
+          <p>Every figure on this page is measured. Where something was not measured, there is no number.</p>
+        </li>
+      </ul>
+
+      <h3 class="subhead">What I work with</h3>
+      <dl class="tools">
+        <div>
+          <dt>Day to day</dt>
+          <dd>AWS (Lambda, ECS, EC2, RDS, API Gateway, Cognito, DynamoDB, SQS, SNS, Route 53, IAM, CloudWatch), Terraform, Python, GitLab CI, Docker, Linux.</dd>
+        </div>
+        <div>
+          <dt>Agents</dt>
+          <dd>Claude API, tool use and permissioned agents, Slack integrations, evaluation and cost measurement.</dd>
+        </div>
+      </dl>
+      <p class="education">BE in Electronics and Computer Science, MBM Engineering College, Jodhpur.</p>
+    </div>
+  </section>
+
+  <!-- 7. Recognition, oldest first, and one earlier project -->
+  <section class="chapter chapter--recognition" id="recognition" data-folio-title="Recognition">
+    <div class="wrap">
+      <h2 class="heading">Recognition</h2>
+      <ol class="awards" data-sc-in data-sc-stagger="70">
+        <li>
+          <p class="awards__date"><time datetime="2026-04">Apr 2026</time></p>
+          <div>
+            <h3 class="awards__title">Winner, internal hackathon, WonderLend Hubs</h3>
+            <p>An AI invoice portal, since integrated into the company’s workflow.</p>
+          </div>
+        </li>
+        <li>
+          <p class="awards__date"><time datetime="2026-07">Jul 2026</time></p>
+          <div>
+            <h3 class="awards__title">3rd place, Google Build with AI: Code for Communities</h3>
+            <p>
+              Run by Google Developer Groups, among <span class="num">7,000</span>+ teams.
+              Smart Health, built with Rupesh Sharma, Isha Desai and Devik Bansal (team ai-rangers).
+              We presented it to Members of Parliament at Demo Day in New Delhi on 22 July 2026.
+            </p>
+            <p><a class="text-link" href="https://certificate.hack2skill.com/verify/2026CFC-W00041" rel="noopener">Verify certificate</a></p>
+          </div>
+        </li>
+        <li>
+          <p class="awards__date"><time datetime="2026-09">Sep 2026</time></p>
+          <div>
+            <h3 class="awards__title">AI Bodh session</h3>
+            <p>Presented to <span class="num">125</span>+ colleagues on working with AI.</p>
+          </div>
+        </li>
+      </ol>
+
+      <section class="earlier" aria-labelledby="earlier-title">
+        <h2 class="subhead" id="earlier-title">An earlier project</h2>
+        <div class="earlier__item" data-sc-in>
+          <h3 class="awards__title">Land registry on Ethereum</h3>
+          <p>A decentralised land registry: register parcels, verify ownership and transfer property through smart contracts, with the full ownership history on chain.</p>
+          <p class="earlier__stack">Solidity, Truffle, React, Web3.js, MetaMask</p>
+          <p><a class="text-link" href="https://github.com/rishi1508/land-registry-blockchain" rel="noopener">Source on GitHub</a></p>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- 8. Colophon: the close resolves and holds -->
+  <section class="chapter chapter--colophon" id="contact" data-sc-act="pin" data-sc-span="1.3" data-folio-title="Contact">
+    <div data-sc-stage class="colophon">
+      <div class="colophon__inner" data-sc-cue="0 1 0 0">
+        <h2 class="heading heading--quiet">Contact</h2>
+        <p class="colophon__line">
+          Email is the best way to reach me:
+          <a class="text-link" href="mailto:rishimishra1508@gmail.com">rishimishra1508@gmail.com</a>.
+          I am also on <a class="text-link" href="https://www.linkedin.com/in/rishimishra1508" rel="noopener">LinkedIn</a>
+          and <a class="text-link" href="https://github.com/rishi1508" rel="noopener">GitHub</a>, and based in Jaipur, India.
+        </p>
+      </div>
+      <footer class="colophon__foot">
+        <p>
+          Set in Bricolage Grotesque and Literata. Built with Astro and deployed by GitHub Actions{shortSha && (
+            <> from commit <a class="text-link" href={`https://github.com/rishi1508/rishi-portfolio/commit/${sha}`} rel="noopener"><code>{shortSha}</code></a></>
+          )} on {builtOn}.
+        </p>
+      </footer>
+    </div>
+  </section>
+
+  <script>
+    import '../vendor/scrollcraft/scrollcraft.js';
+    import '../scripts/page.js';
+  </script>
 </Layout>

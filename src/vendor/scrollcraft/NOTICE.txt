@@ -1,2 +1,0 @@
-scrollcraft.js and scrollcraft.css are the unmodified scroll-craft engine
-by Nate Herk (https://github.com/nateherkai/scroll-craft), MIT licensed.

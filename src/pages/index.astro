@@ -4,14 +4,13 @@ import Layout from '../layouts/Layout.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
-// The colophon names the commit this page was built from. In CI that is
+// The footer names the commit this page was built from. In CI that is
 // GITHUB_SHA; locally it falls back to git.
 let sha = process.env.GITHUB_SHA ?? '';
 if (!sha) {
   try { sha = execSync('git rev-parse HEAD').toString().trim(); } catch { sha = ''; }
 }
 const shortSha = sha.slice(0, 7);
-const builtOn = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata' });
 
 type Entry = {
   period: string;
@@ -21,7 +20,7 @@ type Entry = {
   changed?: string;
   now?: string;
   aside?: string;
-  count?: boolean;
+  link?: boolean;
 };
 
 // Oldest first. Every figure here is from the verified list in the brief.
@@ -60,7 +59,8 @@ const work: Entry[] = [
     name: 'DevOps Bot',
     started: 'Every alarm paged a human, who ran the same checks before they could act.',
     built: 'An always-on AI assistant in Slack with read-only access to infrastructure, narrowly scoped Jira write, role-based access and an audit trail. In production in May, company-wide in June 2026.',
-    count: true,
+    changed: '1,401 alarms diagnosed and 69 colleagues served. Triage starts with the evidence already gathered.',
+    link: true,
   },
   {
     period: 'Sep 2026',
@@ -82,60 +82,111 @@ const work: Entry[] = [
     now: 'I moved into the Founder’s Office to take agents to the teams that need them, and to bring back evidence of what works.',
   },
 ];
+
+// Verified figures only, oldest first.
+const highlights = [
+  { value: '15 to 20 min', label: 'to set up a new tenant, down from about a week', source: 'TenantHub' },
+  { value: '~1,500', label: 'Claude seat bookings a month, with no manual allocation', source: 'Claude seat bot' },
+  { value: '1,401', label: 'alarms diagnosed for 69 colleagues, with read-only access', source: 'DevOps Bot' },
+];
+
+const codeHtml = (lines: string[][]) =>
+  lines.map(([k, line]) => (k ? `<span class="diff-${k}">${line}</span>` : line)).join('\n');
+
+const steps = [
+  {
+    who: 'Alarm', kind: 'alarm', text: 'Error rate above threshold on a payments function, staging.',
+    caption: 'The alarm goes to the agent first, not to a person’s phone.',
+  },
+  {
+    who: 'Agent', kind: 'agent', text: 'Reading recent logs for the payments function.',
+    code: [['', 'ERROR  card-service call timed out'], ['', 'ERROR  card-service call timed out'], ['', 'WARN   retry budget exhausted']],
+    label: 'Log excerpt',
+    caption: 'It can read logs, metrics and config. It cannot change any of them.',
+  },
+  {
+    who: 'Agent', kind: 'agent', text: 'The last deployment changed one setting.',
+    code: [['del', '- card_service.timeout_profile: standard'], ['add', '+ card_service.timeout_profile: aggressive']],
+    label: 'Configuration change',
+    caption: 'It looks where a person would look first.',
+  },
+  {
+    who: 'Agent', kind: 'summary',
+    text: 'Likely cause: the timeout profile changed in the last deployment, and card-service calls started timing out right after it went out.',
+    note: 'Evidence attached: log excerpt, configuration change, error rate. Suggested next step: revert the setting. Needs a person.',
+    caption: 'The summary arrives with the evidence attached, so triage starts from the answer.',
+  },
+  {
+    who: 'On-call engineer', kind: 'human', text: 'Agreed. Reverting it now.',
+    caption: 'A person makes the fix. That is by design.',
+  },
+];
 ---
 
 <Layout>
-  <!-- 1. Title page -->
-  <section class="chapter chapter--title" id="top" data-folio-title="Rishi Mishra">
-    <div class="title-page">
-      <h1 class="title-page__name">Rishi<br />Mishra</h1>
-      <div class="title-page__follow">
-        <p class="title-page__role">Forward Deployed Engineer, Agentic Initiatives at WonderLend Hubs</p>
-        <p class="title-page__lede">I build AI agents and internal tools, then stay with the teams using them until they actually help.</p>
-        <p class="title-page__actions">
-          <a class="button" href="#work">See the work</a>
-          <a class="text-link" href="mailto:rishimishra1508@gmail.com">Email me</a>
+  <!-- Hero -->
+  <section class="hero" id="top">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <h1 class="hero__name">Rishi Mishra</h1>
+        <p class="hero__role">Forward Deployed Engineer, Agentic Initiatives at WonderLend Hubs</p>
+        <p class="hero__lede">I build AI agents and internal tools, then stay with the teams using them until they actually help.</p>
+        <p class="actions">
+          <a class="button button--primary" href="#work">See the work</a>
+          <a class="button button--secondary" href="mailto:rishimishra1508@gmail.com">Email me</a>
         </p>
       </div>
-    </div>
-  </section>
-
-  <!-- 2. How it usually starts: pinned, the irritations arrive one at a time -->
-  <section class="chapter chapter--start" id="start" data-sc-act="pin" data-sc-span="2.4" data-folio-title="How it usually starts">
-    <div data-sc-stage class="start">
-      <figure class="start__portrait">
+      <figure class="hero__photo">
         <img
-          src={`${base}rishi-portrait-240.webp`}
-          srcset={`${base}rishi-portrait-240.webp 240w, ${base}rishi-portrait-480.webp 480w`}
-          sizes="(min-width: 768px) 200px, 112px"
-          width="240" height="300"
-          alt="Rishi Mishra, in a white t-shirt, leaning on a wooden railing outdoors."
-          loading="lazy" decoding="async"
+          src={`${base}rishi-portrait-400.webp`}
+          srcset={`${base}rishi-portrait-400.webp 400w, ${base}rishi-portrait-800.webp 800w`}
+          sizes="(min-width: 900px) 360px, (min-width: 600px) 280px, 200px"
+          width="400" height="500"
+          alt="Rishi Mishra in a white t-shirt, leaning on a wooden railing outdoors."
+          fetchpriority="high" decoding="async"
         />
       </figure>
-      <div class="start__copy">
-        <h2 class="heading">How it usually starts</h2>
-        <p class="start__para">
-          <span>Almost none of this started out looking like innovation. It started as small irritations:</span>
-          <span class="start__item" data-sc-cue="0.08 1 0.12 0">a deployment step that kept going wrong,</span>
-          <span class="start__item" data-sc-cue="0.24 1 0.12 0">an alert that always needed the same three checks,</span>
-          <span class="start__item" data-sc-cue="0.40 1 0.12 0">a manual process everyone had simply accepted.</span>
-          <span class="start__turn" data-sc-cue="0.58 1 0.12 0">Each one looked too small to be a project. The hard part was never the technology. It was understanding the problem properly, sitting with the people who had it, and building something they would actually use.</span>
-        </p>
+    </div>
+
+    <div class="container">
+      <h2 class="visually-hidden">Highlights</h2>
+      <ul class="highlights">
+        {highlights.map((h) => (
+          <li>
+            <p class="highlights__value">{h.value}</p>
+            <p class="highlights__label">{h.label}</p>
+            <p class="highlights__source">{h.source}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- How it usually starts -->
+  <section class="section section--band" id="start" aria-labelledby="start-title">
+    <div class="container split">
+      <h2 class="h2" id="start-title">How it usually starts</h2>
+      <div class="split__body">
+        <p class="large">Almost none of this started out looking like innovation. It started as small irritations: a deployment step that kept going wrong, an alert that always needed the same three checks, a manual process everyone had simply accepted.</p>
+        <p>Each one looked too small to be a project. The hard part was never the technology. It was understanding the problem properly, sitting with the people who had it, and building something they would actually use.</p>
       </div>
     </div>
   </section>
 
-  <!-- 3. The work, oldest first -->
-  <section class="chapter chapter--work" id="work" data-folio-title="The work, in order">
-    <div class="wrap">
-      <h2 class="heading">The work, in order</h2>
-      <p class="intro">Everything since I joined WonderLend Hubs in June 2025, oldest first. Associate DevOps Engineer until October 2026, Forward Deployed Engineer since November.</p>
+  <!-- The work, oldest first -->
+  <section class="section" id="work" aria-labelledby="work-title">
+    <div class="container">
+      <header class="section__head">
+        <h2 class="h2" id="work-title">The work, in order</h2>
+        <p class="section__intro">Everything since I joined WonderLend Hubs in June 2025, oldest first. Associate DevOps Engineer until October 2026, Forward Deployed Engineer since November.</p>
+      </header>
+
       <ol class="timeline" data-timeline>
         {work.map((e, i) => (
           <li class:list={['entry', { 'entry--now': i === work.length - 1 }]} data-entry>
-            <p class="entry__period"><time>{e.period}</time></p>
-            <div class="entry__body" data-sc-in>
+            <p class="entry__date">{e.period}</p>
+            <span class="entry__dot" aria-hidden="true"></span>
+            <div class="entry__body">
               <h3 class="entry__name">{e.name}</h3>
               {e.now ? (
                 <p class="entry__now">{e.now}</p>
@@ -143,19 +194,18 @@ const work: Entry[] = [
                 <dl class="entry__facts">
                   <div><dt>Started from</dt><dd>{e.started}</dd></div>
                   <div><dt>Built</dt><dd>{e.built}</dd></div>
-                  <div>
+                  <div class="entry__changed">
                     <dt>Changed</dt>
-                    {e.count ? (
-                      <dd>
-                        <span class="num">1,401</span> alarms diagnosed and <span class="num">69</span> colleagues served. Triage starts with the evidence already gathered. <a class="text-link" href="#alarm">What it does with an alarm</a>
-                      </dd>
-                    ) : (
-                      <dd>{e.changed}</dd>
-                    )}
+                    <dd>
+                      {e.changed}
+                      {e.link && <> <a href="#alarm">See how it handles an alarm</a></>}
+                    </dd>
                   </div>
                 </dl>
               )}
-              {e.aside && <p class="entry__aside">{e.aside}</p>}
+              {e.aside && (
+                <p class="entry__aside"><strong>Engineering note.</strong> {e.aside}</p>
+              )}
             </div>
           </li>
         ))}
@@ -163,183 +213,153 @@ const work: Entry[] = [
     </div>
   </section>
 
-  <!-- 4 + 5. Intertitle, then the alarm (the peak) -->
-  <section class="chapter chapter--night" id="alarm" data-folio-title="An alarm, step by step">
-    <div class="intertitle" data-sc-act="flow">
-      <div class="intertitle__ground" data-sc-reveal="up" data-sc-reveal-at="0.02 0.32" aria-hidden="true"></div>
-      <div class="intertitle__copy">
-        <h2 class="intertitle__title">What a read-only agent does with an alarm</h2>
-        <p class="intertitle__note">An illustrative example, not a real incident. Every name and value in it is invented.</p>
-      </div>
-    </div>
+  <!-- The signature: what a read-only agent does with an alarm -->
+  <section class="section section--band alarm" id="alarm" aria-labelledby="alarm-title" data-alarm>
+    <div class="alarm__track" data-alarm-track>
+      <div class="alarm__sticky">
+        <div class="container alarm__grid">
+          <div class="alarm__intro">
+            <h2 class="h2" id="alarm-title">What a <span class="nowrap">read-only</span> agent does with an alarm</h2>
+            <p class="alarm__note">An illustrative example, not a real incident. Every name and value in it is invented.</p>
 
-    <div class="alarm" data-sc-act="pin" data-sc-span="4.2" data-alarm>
-      <div data-sc-stage class="alarm__stage">
-        <div class="alarm__thread">
-          <p class="alarm__boundary" aria-hidden="true"><span>Agent: read access</span><span>People: can act</span></p>
-          <ol class="steps">
-            <li class="step step--alarm">
-              <div class="msg msg--system">
-                <p class="msg__from">Alarm, staging</p>
-                <p class="msg__text">Error rate above threshold on a payments function, staging.</p>
+            <div class="alarm__captions" aria-hidden="true">
+              <p class="alarm__counter"><span data-alarm-count>1</span> of {steps.length}</p>
+              <div class="alarm__bars">
+                {steps.map(() => <span></span>)}
               </div>
-              <p class="step__caption" data-sc-cue="0 0.17 0 0.3">The alarm goes to the agent first.</p>
-            </li>
-            <li class="step">
-              <div class="msg msg--agent" data-sc-cue="0.15 1 0.12 0">
-                <p class="msg__from">Agent</p>
-                <p class="msg__text">Reading recent logs for the payments function.</p>
-                <pre class="evidence" aria-label="Log excerpt"><code>ERROR  card-service call timed out
-ERROR  card-service call timed out
-WARN   retry budget exhausted</code></pre>
-              </div>
-              <p class="step__caption" data-sc-cue="0.15 0.37">It can read logs, metrics and config. It cannot change any of them.</p>
-            </li>
-            <li class="step">
-              <div class="msg msg--agent" data-sc-cue="0.35 1 0.12 0">
-                <p class="msg__from">Agent</p>
-                <p class="msg__text">The last deployment changed one setting.</p>
-                <pre class="evidence" aria-label="Configuration change"><code><span class="diff-del">- card_service.timeout_profile: standard</span>
-<span class="diff-add">+ card_service.timeout_profile: aggressive</span></code></pre>
-              </div>
-              <p class="step__caption" data-sc-cue="0.35 0.57">It looks where a person would look first.</p>
-            </li>
-            <li class="step">
-              <div class="msg msg--agent msg--summary" data-sc-cue="0.55 1 0.12 0">
-                <p class="msg__from">Agent, summary</p>
-                <p class="msg__text">Likely cause: the timeout profile changed in the last deployment, and card-service calls started timing out right after it went out.</p>
-                <p class="msg__attached">Evidence attached: log excerpt, configuration change, error rate.</p>
-                <p class="msg__blocked">Suggested next step: revert the setting. Needs a person.</p>
-              </div>
-              <p class="step__caption" data-sc-cue="0.55 0.77">The summary arrives with the evidence attached, so triage starts from the answer.</p>
-            </li>
-            <li class="step step--human">
-              <div class="msg msg--human" data-sc-cue="0.75 1 0.12 0">
-                <p class="msg__from">On-call engineer</p>
-                <p class="msg__text">Agreed. Reverting it now.<span class="caret" aria-hidden="true"></span></p>
-              </div>
-              <p class="step__caption" data-sc-cue="0.75 1 0.12 0">A person makes the fix. That is by design.</p>
-            </li>
-          </ol>
-        </div>
+              {steps.map((s, i) => <p class="alarm__caption" data-caption={i}>{s.caption}</p>)}
+            </div>
+          </div>
 
-        <!-- The signature: an access ledger on the permission boundary, driven by the act's progress. -->
-        <div class="ledger" aria-hidden="true" data-ledger>
-          <p class="ledger__title">Access ledger</p>
-          <ol class="ledger__rows">
-            <li data-at="0.18" data-who="agent"><span class="ledger__act">read logs</span><span class="ledger__state" data-on="allowed">waiting</span></li>
-            <li data-at="0.38" data-who="agent"><span class="ledger__act">read deploy history</span><span class="ledger__state" data-on="allowed">waiting</span></li>
-            <li data-at="0.58" data-who="agent" data-deny><span class="ledger__act">change config</span><span class="ledger__state" data-on="not permitted">waiting</span></li>
-            <li data-at="0.78" data-who="person"><span class="ledger__act">revert setting</span><span class="ledger__state" data-on="done by a person">waiting</span></li>
-          </ol>
+          <div class="thread" role="group" aria-label="Example message thread">
+            <p class="thread__head">
+              <span>Agent: read access</span>
+              <span>People: can act</span>
+            </p>
+            <ol class="thread__list">
+              {steps.map((s, i) => (
+                <li class:list={['step', `step--${s.kind}`]} data-step={i}>
+                  <div class="msg">
+                    <p class="msg__who">{s.who}</p>
+                    <p class="msg__text">{s.text}{s.kind === 'human' && <span class="caret" aria-hidden="true"></span>}</p>
+                    {s.code && (
+                      <pre class="msg__code" aria-label={s.label}><code set:html={codeHtml(s.code)} /></pre>
+                    )}
+                    {s.note && <p class="msg__note">{s.note}</p>}
+                  </div>
+                  <p class="step__caption">{s.caption}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 6. How I build -->
-  <section class="chapter chapter--approach" id="approach" data-sc-act="flow" data-folio-title="How I build">
-    <div class="wrap">
-      <h2 class="heading">How I build</h2>
+  <!-- How I build -->
+  <section class="section" id="approach" aria-labelledby="approach-title">
+    <div class="container">
+      <header class="section__head">
+        <h2 class="h2" id="approach-title">How I build</h2>
+      </header>
       <ul class="principles">
         <li>
-          <h3 class="principle__head" data-sc-cue="0.12" data-sc-kinetic="lines">Built to be adopted, not tolerated.</h3>
+          <h3 class="h3">Built to be adopted, not tolerated.</h3>
           <p>If people route around a tool, it has failed, however clever it is.</p>
         </li>
         <li>
-          <h3 class="principle__head" data-sc-cue="0.22" data-sc-kinetic="lines">Guardrails in the system, not in the prompt.</h3>
+          <h3 class="h3">Guardrails in the system, not in the prompt.</h3>
           <p>Permissions, scopes and audit trails do the safety work. A model can be talked out of a rule in a prompt; it cannot talk its way past a permission it does not have.</p>
         </li>
         <li>
-          <h3 class="principle__head" data-sc-cue="0.32" data-sc-kinetic="lines">Numbers I can defend.</h3>
+          <h3 class="h3">Numbers I can defend.</h3>
           <p>Every figure on this page is measured. Where something was not measured, there is no number.</p>
         </li>
       </ul>
 
-      <h3 class="subhead">What I work with</h3>
-      <dl class="tools">
-        <div>
-          <dt>Day to day</dt>
-          <dd>AWS (Lambda, ECS, EC2, RDS, API Gateway, Cognito, DynamoDB, SQS, SNS, Route 53, IAM, CloudWatch), Terraform, Python, GitLab CI, Docker, Linux.</dd>
-        </div>
-        <div>
-          <dt>Agents</dt>
-          <dd>Claude API, tool use and permissioned agents, Slack integrations, evaluation and cost measurement.</dd>
-        </div>
-      </dl>
-      <p class="education">BE in Electronics and Computer Science, MBM Engineering College, Jodhpur.</p>
+      <div class="skills">
+        <h3 class="h3">What I work with</h3>
+        <dl class="skills__list">
+          <div>
+            <dt>Day to day</dt>
+            <dd>AWS (Lambda, ECS, EC2, RDS, API Gateway, Cognito, DynamoDB, SQS, SNS, Route 53, IAM, CloudWatch), Terraform, Python, GitLab CI, Docker, Linux.</dd>
+          </div>
+          <div>
+            <dt>Agents</dt>
+            <dd>Claude API, tool use and permissioned agents, Slack integrations, evaluation and cost measurement.</dd>
+          </div>
+          <div>
+            <dt>Education</dt>
+            <dd>BE in Electronics and Computer Science, MBM Engineering College, Jodhpur.</dd>
+          </div>
+        </dl>
+      </div>
     </div>
   </section>
 
-  <!-- 7. Recognition, oldest first, and one earlier project -->
-  <section class="chapter chapter--recognition" id="recognition" data-folio-title="Recognition">
-    <div class="wrap">
-      <h2 class="heading">Recognition</h2>
-      <ol class="awards" data-sc-in data-sc-stagger="70">
+  <!-- Recognition, oldest first, and one earlier project -->
+  <section class="section section--band" id="recognition" aria-labelledby="recognition-title">
+    <div class="container">
+      <header class="section__head">
+        <h2 class="h2" id="recognition-title">Recognition</h2>
+      </header>
+      <ol class="list">
         <li>
-          <p class="awards__date"><time datetime="2026-04">Apr 2026</time></p>
+          <p class="list__date">Apr 2026</p>
           <div>
-            <h3 class="awards__title">Winner, internal hackathon, WonderLend Hubs</h3>
+            <h3 class="h3">Winner, internal hackathon, WonderLend Hubs</h3>
             <p>An AI invoice portal, since integrated into the company’s workflow.</p>
           </div>
         </li>
         <li>
-          <p class="awards__date"><time datetime="2026-07">Jul 2026</time></p>
+          <p class="list__date">Jul 2026</p>
           <div>
-            <h3 class="awards__title">3rd place, Google Build with AI: Code for Communities</h3>
-            <p>
-              Run by Google Developer Groups, among <span class="num">7,000</span>+ teams.
-              Smart Health, built with Rupesh Sharma, Isha Desai and Devik Bansal (team ai-rangers).
-              We presented it to Members of Parliament at Demo Day in New Delhi on 22 July 2026.
-            </p>
-            <p><a class="text-link" href="https://certificate.hack2skill.com/verify/2026CFC-W00041" rel="noopener">Verify certificate</a></p>
+            <h3 class="h3">3rd place, Google Build with AI: Code for Communities</h3>
+            <p>Run by Google Developer Groups, among 7,000+ teams. Smart Health, built with Rupesh Sharma, Isha Desai and Devik Bansal (team ai-rangers). We presented it to Members of Parliament at Demo Day in New Delhi on 22 July 2026.</p>
+            <p><a href="https://certificate.hack2skill.com/verify/2026CFC-W00041" rel="noopener">Verify certificate</a></p>
           </div>
         </li>
         <li>
-          <p class="awards__date"><time datetime="2026-09">Sep 2026</time></p>
+          <p class="list__date">Sep 2026</p>
           <div>
-            <h3 class="awards__title">AI Bodh session</h3>
-            <p>Presented to <span class="num">125</span>+ colleagues on working with AI.</p>
+            <h3 class="h3">AI Bodh session</h3>
+            <p>Presented to 125+ colleagues on working with AI.</p>
           </div>
         </li>
       </ol>
 
-      <section class="earlier" aria-labelledby="earlier-title">
-        <h2 class="subhead" id="earlier-title">An earlier project</h2>
-        <div class="earlier__item" data-sc-in>
-          <h3 class="awards__title">Land registry on Ethereum</h3>
-          <p>A decentralised land registry: register parcels, verify ownership and transfer property through smart contracts, with the full ownership history on chain.</p>
-          <p class="earlier__stack">Solidity, Truffle, React, Web3.js, MetaMask</p>
-          <p><a class="text-link" href="https://github.com/rishi1508/land-registry-blockchain" rel="noopener">Source on GitHub</a></p>
-        </div>
-      </section>
+      <h2 class="h2 h2--small" id="earlier-title">An earlier project</h2>
+      <div class="project">
+        <h3 class="h3">Land registry on Ethereum</h3>
+        <p>A decentralised land registry: register parcels, verify ownership and transfer property through smart contracts, with the full ownership history on chain.</p>
+        <p class="project__stack">Solidity, Truffle, React, Web3.js, MetaMask</p>
+        <p><a href="https://github.com/rishi1508/land-registry-blockchain" rel="noopener">Source on GitHub</a></p>
+      </div>
     </div>
   </section>
 
-  <!-- 8. Colophon: the close resolves and holds -->
-  <section class="chapter chapter--colophon" id="contact" data-sc-act="pin" data-sc-span="1.3" data-folio-title="Contact">
-    <div data-sc-stage class="colophon">
-      <div class="colophon__inner" data-sc-cue="0 1 0 0">
-        <h2 class="heading heading--quiet">Contact</h2>
-        <p class="colophon__line">
-          Email is the best way to reach me:
-          <a class="text-link" href="mailto:rishimishra1508@gmail.com">rishimishra1508@gmail.com</a>.
-          I am also on <a class="text-link" href="https://www.linkedin.com/in/rishimishra1508" rel="noopener">LinkedIn</a>
-          and <a class="text-link" href="https://github.com/rishi1508" rel="noopener">GitHub</a>, and based in Jaipur, India.
-        </p>
-      </div>
-      <footer class="colophon__foot">
-        <p>
-          Set in Bricolage Grotesque and Literata. Built with Astro and deployed by GitHub Actions{shortSha && (
-            <> from commit <a class="text-link" href={`https://github.com/rishi1508/rishi-portfolio/commit/${sha}`} rel="noopener"><code>{shortSha}</code></a></>
-          )} on {builtOn}.
-        </p>
-      </footer>
+  <!-- Contact -->
+  <section class="section contact" id="contact" aria-labelledby="contact-title">
+    <div class="container">
+      <h2 class="h2" id="contact-title">Contact</h2>
+      <p class="large contact__line">Email is the best way to reach me.</p>
+      <p class="actions">
+        <a class="button button--primary" href="mailto:rishimishra1508@gmail.com">rishimishra1508@gmail.com</a>
+      </p>
+      <ul class="contact__links">
+        <li><a href="https://www.linkedin.com/in/rishimishra1508" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://github.com/rishi1508" rel="noopener">GitHub</a></li>
+        <li>Jaipur, India</li>
+      </ul>
     </div>
   </section>
+
+  {shortSha && (
+    <p slot="footer">Built with Astro, deployed by GitHub Actions from commit <a href={`https://github.com/rishi1508/rishi-portfolio/commit/${sha}`} rel="noopener"><code>{shortSha}</code></a></p>
+  )}
 
   <script>
-    import '../vendor/scrollcraft/scrollcraft.js';
     import '../scripts/page.js';
   </script>
 </Layout>

@@ -1,119 +1,91 @@
-/* Page behaviour on top of the unmodified scrollcraft engine.
-   1. Decide pinned or static before the engine mounts.
-   2. Mount the engine.
-   3. Timeline progress line and dots.
-   4. Margin folio (current chapter).
-   5. The access ledger in the alarm sequence (the signature), driven by --sc-p. */
-(function () {
-  'use strict';
-  var doc = document;
-  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var narrow = matchMedia('(max-width: 767px)').matches;
+/* Page behaviour. Two things only, both following native scroll:
+   1. The work timeline's progress line and dots.
+   2. The alarm walkthrough: a sticky thread that advances one step at a time
+      on wide screens, and a plain list everywhere else. */
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+const HEADER = 64;
 
-  // 1. Static mode. Reduced motion: no pinning anywhere. Narrow screens: the
-  // alarm sequence becomes a stacked list that reveals each step once.
-  function unpin(act, reveal) {
-    act.setAttribute('data-sc-act', 'flow');
-    act.removeAttribute('data-sc-span');
-    act.classList.add('is-static');
-    Array.prototype.forEach.call(act.querySelectorAll('[data-sc-cue]'), function (el) {
-      el.removeAttribute('data-sc-cue');
-      el.removeAttribute('data-sc-kinetic');
-      if (reveal) el.setAttribute('data-sc-in', '');
-    });
+const timeline = document.querySelector('[data-timeline]');
+const entries = timeline ? [...timeline.querySelectorAll('[data-entry]')] : [];
+
+const alarm = document.querySelector('[data-alarm]');
+const track = alarm && alarm.querySelector('[data-alarm-track]');
+const steps = alarm ? [...alarm.querySelectorAll('[data-step]')] : [];
+const captions = alarm ? [...alarm.querySelectorAll('[data-caption]')] : [];
+const bars = alarm ? [...alarm.querySelectorAll('.alarm__bars span')] : [];
+const count = alarm && alarm.querySelector('[data-alarm-count]');
+let pinned = false;
+let current = -1;
+
+function clamp(v) { return Math.min(1, Math.max(0, v)); }
+
+function updateTimeline() {
+  if (!timeline) return;
+  const r = timeline.getBoundingClientRect();
+  const mark = innerHeight * 0.6;
+  timeline.style.setProperty('--fill', clamp((mark - r.top) / r.height).toFixed(4));
+  for (const e of entries) {
+    e.classList.toggle('is-reached', e.getBoundingClientRect().top + 12 < mark);
   }
-  if (reduce) {
-    Array.prototype.forEach.call(doc.querySelectorAll('[data-sc-act="pin"]'), function (a) { unpin(a, false); });
-    Array.prototype.forEach.call(doc.querySelectorAll('[data-sc-kinetic]'), function (el) {
-      el.removeAttribute('data-sc-kinetic');
-    });
+}
+
+function setStep(i) {
+  if (i === current) return;
+  current = i;
+  steps.forEach((s, n) => s.classList.toggle('is-on', n <= i));
+  captions.forEach((c, n) => c.classList.toggle('is-on', n === i));
+  bars.forEach((b, n) => b.classList.toggle('is-on', n <= i));
+  if (count) count.textContent = String(i + 1);
+}
+
+function updateAlarm() {
+  if (!pinned) return;
+  const r = track.getBoundingClientRect();
+  const span = r.height - (innerHeight - HEADER);
+  const p = clamp((HEADER - r.top) / span);
+  setStep(Math.min(steps.length - 1, Math.floor(p * steps.length * 1.08)));
+}
+
+// Pin only where it reads well: a wide screen, motion allowed, and a thread
+// that fits the viewport with every step shown.
+function decideAlarm() {
+  if (!alarm) return;
+  // Measure in the pinned layout, where captions move out of the thread.
+  alarm.classList.add('is-pinned');
+  const grid = alarm.querySelector('.alarm__grid');
+  const fits = grid.offsetHeight + HEADER + 48 <= innerHeight;
+  pinned = !reduce.matches && innerWidth >= 900 && fits;
+  alarm.classList.toggle('is-pinned', pinned);
+  if (pinned) {
+    current = -1;
+    updateAlarm();
   } else {
-    // Narrow screens: the alarm becomes a stacked list.
-    var alarm = doc.querySelector('[data-alarm]');
-    if (alarm && narrow) unpin(alarm, true);
-    // Any pinned act whose content does not fit the viewport (a short laptop
-    // window, a small phone) would be clipped while pinned, so it reads as a
-    // normal section instead. Measured before the engine sets heights.
-    Array.prototype.forEach.call(doc.querySelectorAll('[data-sc-act="pin"]'), function (a) {
-      var stage = a.querySelector('[data-sc-stage]');
-      if (!stage) return;
-      if (stage.offsetHeight > innerHeight - 16) unpin(a, true);
-    });
+    steps.forEach((s) => s.classList.add('is-on'));
   }
+}
 
-  // 2. Engine.
-  if (window.ScrollCraft) window.ScrollCraft.mount(doc.body);
-
-  // 3 to 5 share one passive scroll listener and one rAF.
-  var timeline = doc.querySelector('[data-timeline]');
-  var entries = timeline ? timeline.querySelectorAll('[data-entry]') : [];
-  var folio = doc.querySelector('[data-folio]');
-  var chapters = doc.querySelectorAll('[data-folio-title]');
-  var alarmAct = doc.querySelector('[data-alarm]');
-  var ledger = doc.querySelector('[data-ledger]');
-  var rows = ledger ? ledger.querySelectorAll('li') : [];
-  var ledgerLive = ledger && alarmAct && !alarmAct.classList.contains('is-static');
-  var lastFolio = '';
-  var queued = false;
-
-  function frame() {
-    queued = false;
-    var vh = innerHeight;
-    var mark = vh * 0.4;
-
-    if (timeline) {
-      var r = timeline.getBoundingClientRect();
-      var fill = r.height ? (mark - r.top) / r.height : 1;
-      fill = fill < 0 ? 0 : fill > 1 ? 1 : fill;
-      timeline.style.setProperty('--fill', fill.toFixed(4));
-      for (var i = 0; i < entries.length; i++) {
-        var top = entries[i].getBoundingClientRect().top;
-        entries[i].classList.toggle('is-reached', top < mark);
-      }
-    }
-
-    if (folio) {
-      var title = '';
-      for (var c = 0; c < chapters.length; c++) {
-        if (chapters[c].getBoundingClientRect().top <= mark) title = chapters[c].getAttribute('data-folio-title');
-      }
-      if (title !== lastFolio) { folio.textContent = title || ' '; lastFolio = title; }
-    }
-
-    if (ledgerLive) {
-      var p = parseFloat(alarmAct.style.getPropertyValue('--sc-p')) || 0;
-      for (var k = 0; k < rows.length; k++) {
-        var row = rows[k];
-        var on = p >= parseFloat(row.getAttribute('data-at'));
-        if (row.classList.contains('is-on') !== on) {
-          row.classList.toggle('is-on', on);
-          var st = row.querySelector('.ledger__state');
-          st.textContent = on ? st.getAttribute('data-on') : 'waiting';
-        }
-      }
-    }
-  }
-  function queue() { if (!queued) { queued = true; requestAnimationFrame(frame); } }
-
-  if (ledger && !ledgerLive) {
-    // Static mode: show the ledger resolved.
-    Array.prototype.forEach.call(rows, function (row) {
-      row.classList.add('is-on');
-      var st = row.querySelector('.ledger__state');
-      st.textContent = st.getAttribute('data-on');
-    });
-  }
-
-  // Keyboard users can tab into a block before its entry fade has fired.
-  // Reveal it at once so focus never lands on something invisible.
-  doc.addEventListener('focusin', function (e) {
-    var host = e.target.closest && e.target.closest('[data-sc-in]:not(.sc-in)');
-    if (!host) return;
-    host.classList.add('sc-in');
-    Array.prototype.forEach.call(host.children, function (k) { k.classList.add('sc-in'); });
+let ticking = false;
+function onScroll() {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    ticking = false;
+    updateTimeline();
+    updateAlarm();
   });
+}
 
-  addEventListener('scroll', queue, { passive: true });
-  addEventListener('resize', queue);
-  queue();
-})();
+// Measuring forces layout, so wait until the first paint is done.
+function init() {
+  decideAlarm();
+  updateTimeline();
+}
+if (document.readyState === 'complete') setTimeout(init, 0);
+else addEventListener('load', () => setTimeout(init, 0), { once: true });
+addEventListener('scroll', onScroll, { passive: true });
+let resizeTimer;
+addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { decideAlarm(); updateTimeline(); }, 120);
+});
+reduce.addEventListener('change', decideAlarm);

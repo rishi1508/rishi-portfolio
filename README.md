@@ -2,9 +2,9 @@
 
 https://rishi1508.github.io/rishi-portfolio/
 
-A single long page in a chaptered editorial layout: a title page, how the work
-usually starts, the work in date order, an illustrated walk through what a
-read-only agent does with an alarm, how I build, recognition, and a colophon.
+One page: a hero with highlights, how the work usually starts, the work in
+date order on a timeline, a step-by-step example of what a read-only agent does
+with an alarm, how I build, recognition, and contact.
 
 ## Stack
 
@@ -12,13 +12,12 @@ read-only agent does with an alarm, how I build, recognition, and a colophon.
   `.github/workflows/deploy.yml` on every push to `main`.
 - Plain CSS in `src/styles/global.css` (Tailwind is wired in but the page uses
   custom properties and hand-written rules).
-- Scroll behaviour comes from the unmodified
-  [scroll-craft](https://github.com/nateherkai/scroll-craft) engine
-  (`src/vendor/scrollcraft/`, MIT). Page-specific behaviour (pin fallbacks,
-  timeline line, folio, access ledger) is in `src/scripts/page.js`.
+- Native scrolling throughout. `src/scripts/page.js` (about 2 KB) fills the
+  timeline line and advances the alarm example, which sticks in place on wide
+  screens and is a plain list everywhere else.
 - Fonts: Bricolage Grotesque and Literata, self-hosted, subset to Latin and
   trimmed to the axis ranges the page uses (`public/fonts/`, OFL).
-- No framework runtime is shipped. About 24 KB of minified JS in total.
+- No framework runtime is shipped. 
 
 ## Content rules
 
@@ -40,10 +39,10 @@ The site is served under `/rishi-portfolio/`, so internal links use
 
 ## Accessibility and motion
 
-- `prefers-reduced-motion: reduce` removes all pinning; the alarm sequence and
-  every other section render as static content.
-- Below 768px the alarm sequence is a stacked list. Any pinned section that
-  would not fit the viewport is shown unpinned.
+- `prefers-reduced-motion: reduce` shows the alarm example as a static list and
+  turns off the load animation.
+- Below 900px wide, or when the window is too short, the alarm example is a
+  stacked list.
 - Without JavaScript, all content is visible.
 - Light and dark themes follow the system setting, with a toggle that is
   remembered per browser.

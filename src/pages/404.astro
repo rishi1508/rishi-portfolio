@@ -3,17 +3,13 @@ import Layout from '../layouts/Layout.astro';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 
-<Layout title="Page not found, Rishi Mishra" description="This page does not exist." plain>
-  <section class="chapter chapter--title">
-    <div class="title-page">
-      <p class="entry__period">404</p>
-      <h1 class="title-page__name">Not found</h1>
-      <div class="title-page__follow">
-        <p class="title-page__lede">There is nothing at this address. It may have moved when the site was rebuilt.</p>
-        <p class="title-page__actions">
-          <a class="button" href={base}>Go to the home page</a>
-        </p>
-      </div>
+<Layout title="Page not found, Rishi Mishra" description="This page does not exist.">
+  <section class="section notfound">
+    <div class="container">
+      <p class="meta">Error 404</p>
+      <h1 class="h1">Page not found</h1>
+      <p class="lede">There is nothing at this address. It may have moved when the site was rebuilt.</p>
+      <p class="actions"><a class="button button--primary" href={base}>Go to the home page</a></p>
     </div>
   </section>
 </Layout>

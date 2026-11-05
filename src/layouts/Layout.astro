@@ -48,6 +48,7 @@ const year = new Date().getFullYear();
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
     <link rel="manifest" href={`${base}manifest.json`} />
+    <link rel="alternate" type="text/plain" href={`${base}llms.txt`} title="Plain text profile for AI agents" />
     <meta name="theme-color" content="#E8EEF6" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0F1A33" media="(prefers-color-scheme: dark)" />
 
@@ -101,10 +102,10 @@ const year = new Date().getFullYear();
           </button>
           <nav class="site-nav" id="site-nav" aria-label="Primary" data-menu-panel>
             <ul>
-              {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+              {nav.map((n) => <li><a href={n.href} data-nav={n.href.split('#')[1]}>{n.label}</a></li>)}
             </ul>
           </nav>
-          <button class="theme-toggle" type="button" aria-pressed="false" aria-label="Dark theme" title="Toggle dark theme" data-theme-toggle>
+          <button class="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch to dark theme" data-theme-toggle>
             <svg class="icon-moon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
             <svg class="icon-sun" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg>
           </button>
@@ -119,7 +120,7 @@ const year = new Date().getFullYear();
     <footer class="site-footer">
       <div class="container site-footer__inner">
         <p>&copy; {year} Rishi Mishra</p>
-        <slot name="footer" />
+        <a class="to-top" href={`${base}#top`}>Back to top</a>
       </div>
     </footer>
 
@@ -132,7 +133,13 @@ const year = new Date().getFullYear();
           var t = root.getAttribute('data-theme');
           return t ? t === 'dark' : mq.matches;
         }
-        function sync() { btn.setAttribute('aria-pressed', String(isDark())); }
+        // The icon and the label both name what a click will do.
+        function sync() {
+          var label = isDark() ? 'Switch to light theme' : 'Switch to dark theme';
+          btn.setAttribute('aria-label', label);
+          btn.setAttribute('title', label);
+          btn.classList.toggle('is-dark', isDark());
+        }
         btn.addEventListener('click', function () {
           var next = isDark() ? 'light' : 'dark';
           root.setAttribute('data-theme', next);

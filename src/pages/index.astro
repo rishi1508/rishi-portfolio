@@ -1,18 +1,10 @@
 ---
-import { execSync } from 'node:child_process';
 import Layout from '../layouts/Layout.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
-// The footer names the commit this page was built from. In CI that is
-// GITHUB_SHA; locally it falls back to git.
-let sha = process.env.GITHUB_SHA ?? '';
-if (!sha) {
-  try { sha = execSync('git rev-parse HEAD').toString().trim(); } catch { sha = ''; }
-}
-const shortSha = sha.slice(0, 7);
-
 type Entry = {
+  id: string;
   period: string;
   name: string;
   started?: string;
@@ -21,12 +13,15 @@ type Entry = {
   now?: string;
   aside?: string;
   link?: boolean;
+  /** A verified headline figure, shown in the hero and linked back here. */
+  headline?: { value: string; label: string };
 };
 
 // Oldest first. Every figure here is from the verified list in the brief.
 const work: Entry[] = [
   {
     period: 'Aug to Sep 2025',
+    id: 'changelog-validator',
     name: 'Changelog validator',
     started: 'Malformed deployment changelogs kept breaking deploys.',
     built: 'Type and query validation, with error previews, inside the changelog tool developers already used.',
@@ -34,6 +29,7 @@ const work: Entry[] = [
   },
   {
     period: 'Nov 2025',
+    id: 'java-lambda',
     name: 'Java Lambda automation',
     started: 'Our deployment automation only understood Python.',
     built: 'Extended it to Java Lambdas, with a Maven CI pipeline and a way to import existing functions into Terraform state. Tenant lists now load live instead of being hardcoded.',
@@ -41,29 +37,36 @@ const work: Entry[] = [
   },
   {
     period: 'Jan to Apr 2026',
+    id: 'tenanthub',
     name: 'TenantHub',
     started: 'Setting up a new tenant took about a week of one person’s time.',
     built: 'One-click tenant setup, a validator and a decommissioner, provisioning across 17 AWS service modules. Live in staging from January and in production from April 2026.',
     changed: 'About 1 week down to 15 to 20 minutes.',
+    headline: { value: '15 to 20 min', label: 'to set up a new tenant, down from about a week' },
     aside: 'Along the way I found the validator was silently swallowing AWS auth failures and reporting “0 issues” on broken tenants, so I added extraction-error tracking across all 12 extractors and comparators.',
   },
   {
     period: 'May 2026',
+    id: 'seat-bot',
     name: 'Claude seat bot',
     started: 'Leads were allocating shared Claude seats by hand.',
     built: 'A Slack bot with scheduling, queuing and priority-based assignment.',
     changed: 'Around 1,500 bookings a month, with no manual allocation.',
+    headline: { value: '~1,500', label: 'Claude seat bookings a month, with no manual allocation' },
   },
   {
     period: 'May to Jun 2026',
+    id: 'devops-bot',
     name: 'DevOps Bot',
     started: 'Every alarm paged a human, who ran the same checks before they could act.',
     built: 'An always-on AI assistant in Slack with read-only access to infrastructure, narrowly scoped Jira write, role-based access and an audit trail. In production in May, company-wide in June 2026.',
     changed: '1,401 alarms diagnosed and 69 colleagues served. Triage starts with the evidence already gathered.',
     link: true,
+    headline: { value: '1,401', label: 'alarms diagnosed for 69 colleagues, with read-only access' },
   },
   {
     period: 'Sep 2026',
+    id: 'audithub',
     name: 'AuditHub',
     started: 'Client security questionnaires were answered by hand, from scratch, every time.',
     built: 'An AI-assisted portal behind SSO, with role-based access, AI drafting, review and a knowledge base.',
@@ -71,6 +74,7 @@ const work: Entry[] = [
   },
   {
     period: 'Sep to Oct 2026',
+    id: 'agent-framework',
     name: 'A shared agent framework',
     started: 'Teams were starting to build agents separately, each re-solving security, memory, cost and audit.',
     built: 'Helped set the company’s direction for how agents get built, then built the foundation of a shared framework where an agent is a configuration file, not code.',
@@ -78,17 +82,15 @@ const work: Entry[] = [
   },
   {
     period: 'Nov 2026 onward',
+    id: 'now',
     name: 'Forward Deployed Engineer',
     now: 'I moved into the Founder’s Office to take agents to the teams that need them, and to bring back evidence of what works.',
   },
 ];
 
-// Verified figures only, oldest first.
-const highlights = [
-  { value: '15 to 20 min', label: 'to set up a new tenant, down from about a week', source: 'TenantHub' },
-  { value: '~1,500', label: 'Claude seat bookings a month, with no manual allocation', source: 'Claude seat bot' },
-  { value: '1,401', label: 'alarms diagnosed for 69 colleagues, with read-only access', source: 'DevOps Bot' },
-];
+// Highlights come from the entries themselves, so they stay oldest first and
+// every figure links back to the work it came from.
+const highlights = work.filter((e) => e.headline).map((e) => ({ ...e.headline!, source: e.name, id: e.id }));
 
 const codeHtml = (lines: string[][]) =>
   lines.map(([k, line]) => (k ? `<span class="diff-${k}">${line}</span>` : line)).join('\n');
@@ -155,7 +157,7 @@ const steps = [
           <li>
             <p class="highlights__value">{h.value}</p>
             <p class="highlights__label">{h.label}</p>
-            <p class="highlights__source">{h.source}</p>
+            <p class="highlights__source"><a href={`#${h.id}`}>{h.source}</a></p>
           </li>
         ))}
       </ul>
@@ -164,6 +166,7 @@ const steps = [
 
   <!-- How it usually starts -->
   <section class="section section--band" id="start" aria-labelledby="start-title">
+    <span id="about" class="anchor-alias" aria-hidden="true"></span>
     <div class="container split">
       <h2 class="h2" id="start-title">How it usually starts</h2>
       <div class="split__body">
@@ -175,6 +178,7 @@ const steps = [
 
   <!-- The work, oldest first -->
   <section class="section" id="work" aria-labelledby="work-title">
+    <span id="experience" class="anchor-alias" aria-hidden="true"></span>
     <div class="container">
       <header class="section__head">
         <h2 class="h2" id="work-title">The work, in order</h2>
@@ -183,7 +187,7 @@ const steps = [
 
       <ol class="timeline" data-timeline>
         {work.map((e, i) => (
-          <li class:list={['entry', { 'entry--now': i === work.length - 1 }]} data-entry>
+          <li class:list={['entry', { 'entry--now': i === work.length - 1 }]} id={e.id} data-entry>
             <p class="entry__date">{e.period}</p>
             <span class="entry__dot" aria-hidden="true"></span>
             <div class="entry__body">
@@ -222,12 +226,14 @@ const steps = [
             <h2 class="h2" id="alarm-title">What a <span class="nowrap">read-only</span> agent does with an alarm</h2>
             <p class="alarm__note">An illustrative example, not a real incident. Every name and value in it is invented.</p>
 
-            <div class="alarm__captions" aria-hidden="true">
-              <p class="alarm__counter"><span data-alarm-count>1</span> of {steps.length}</p>
-              <div class="alarm__bars">
-                {steps.map(() => <span></span>)}
+            <div class="alarm__captions">
+              <p class="alarm__counter" aria-hidden="true">Step <span data-alarm-count>1</span> of {steps.length}</p>
+              <div class="alarm__bars" role="group" aria-label="Jump to a step">
+                {steps.map((_, i) => <button type="button" data-goto={i} aria-label={`Step ${i + 1} of ${steps.length}`}><span></span></button>)}
               </div>
-              {steps.map((s, i) => <p class="alarm__caption" data-caption={i}>{s.caption}</p>)}
+              <div aria-hidden="true">
+                {steps.map((s, i) => <p class="alarm__caption" data-caption={i}>{s.caption}</p>)}
+              </div>
             </div>
           </div>
 
@@ -278,7 +284,7 @@ const steps = [
         </li>
       </ul>
 
-      <div class="skills">
+      <div class="skills" id="skills">
         <h3 class="h3">What I work with</h3>
         <dl class="skills__list">
           <div>
@@ -329,11 +335,13 @@ const steps = [
         </li>
       </ol>
 
-      <h2 class="h2 h2--small" id="earlier-title">An earlier project</h2>
+      <h2 class="h2 h2--small" id="projects">An earlier project</h2>
       <div class="project">
         <h3 class="h3">Land registry on Ethereum</h3>
         <p>A decentralised land registry: register parcels, verify ownership and transfer property through smart contracts, with the full ownership history on chain.</p>
-        <p class="project__stack">Solidity, Truffle, React, Web3.js, MetaMask</p>
+        <ul class="tags" aria-label="Built with">
+          {['Solidity', 'Truffle', 'React', 'Web3.js', 'MetaMask'].map((t) => <li>{t}</li>)}
+        </ul>
         <p><a href="https://github.com/rishi1508/land-registry-blockchain" rel="noopener">Source on GitHub</a></p>
       </div>
     </div>
@@ -344,9 +352,15 @@ const steps = [
     <div class="container">
       <h2 class="h2" id="contact-title">Contact</h2>
       <p class="large contact__line">Email is the best way to reach me.</p>
-      <p class="actions">
+      <p class="actions contact__email">
         <a class="button button--primary" href="mailto:rishimishra1508@gmail.com">rishimishra1508@gmail.com</a>
+        <button class="button button--secondary copy" type="button" data-copy="rishimishra1508@gmail.com">
+          <svg class="copy__icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></g></svg>
+          <svg class="copy__done" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span data-copy-label>Copy email</span>
+        </button>
       </p>
+      <p class="visually-hidden" role="status" data-copy-status></p>
       <ul class="contact__links">
         <li><a href="https://www.linkedin.com/in/rishimishra1508" rel="noopener">LinkedIn</a></li>
         <li><a href="https://github.com/rishi1508" rel="noopener">GitHub</a></li>
@@ -354,10 +368,6 @@ const steps = [
       </ul>
     </div>
   </section>
-
-  {shortSha && (
-    <p slot="footer">Built with Astro, deployed by GitHub Actions from commit <a href={`https://github.com/rishi1508/rishi-portfolio/commit/${sha}`} rel="noopener"><code>{shortSha}</code></a></p>
-  )}
 
   <script>
     import '../scripts/page.js';

@@ -1,0 +1,35 @@
+# Rishi Mishra
+
+> Forward Deployed Engineer, Agentic Initiatives at WonderLend Hubs, based in Jaipur, India. Builds AI agents and internal tools, then stays with the teams using them until they actually help. Every figure below is measured.
+
+## Work, oldest first
+
+- Aug to Sep 2025, Changelog validator: type and query validation with error previews in the deployment changelog tool. Malformed changelogs went from 10 to 15 a month to under 1.
+- Nov 2025, Java Lambda automation: extended deployment automation to Java Lambdas, with a Maven CI pipeline and importing existing functions into Terraform state.
+- Jan to Apr 2026, TenantHub: one-click tenant setup, validator and decommissioner across 17 AWS service modules. Setup went from about 1 week to 15 to 20 minutes.
+- May 2026, Claude seat bot: a Slack bot with scheduling, queuing and priority-based assignment. Around 1,500 bookings a month with no manual allocation.
+- May to Jun 2026, DevOps Bot: an always-on AI assistant in Slack with read-only infrastructure access, role-based access and an audit trail. 1,401 alarms diagnosed, 69 colleagues served. A person makes every fix.
+- Sep 2026, AuditHub: an AI-assisted portal for security questionnaires, behind SSO, with AI drafting, review and a knowledge base.
+- Sep to Oct 2026, shared agent framework: an agent is a configuration file, not code. 28 modules and 325 tests, no third-party dependencies in its core.
+- Nov 2026 onward, Forward Deployed Engineer in the Founder's Office.
+
+## Recognition, oldest first
+
+- Apr 2026: Winner, internal hackathon, WonderLend Hubs (AI invoice portal).
+- Jul 2026: 3rd place, Google Build with AI: Code for Communities, among 7,000+ teams. Certificate: https://certificate.hack2skill.com/verify/2026CFC-W00041
+- Sep 2026: AI Bodh session, presented to 125+ colleagues.
+
+## Skills
+
+AWS (Lambda, ECS, EC2, RDS, API Gateway, Cognito, DynamoDB, SQS, SNS, Route 53, IAM, CloudWatch), Terraform, Python, GitLab CI, Docker, Linux. Claude API, tool use and permissioned agents, Slack integrations, evaluation and cost measurement.
+
+## Education
+
+BE in Electronics and Computer Science, MBM Engineering College, Jodhpur.
+
+## Contact
+
+- Email: rishimishra1508@gmail.com
+- LinkedIn: https://www.linkedin.com/in/rishimishra1508
+- GitHub: https://github.com/rishi1508
+- Site: https://rishi1508.github.io/rishi-portfolio/
